@@ -28,6 +28,7 @@ import model.Customer;
 import org.jdesktop.swingx.JXDatePicker;
 
 import utils.CustomPair;
+import utils.Helper;
 import database.CustomerHandler;
 
 public class AddNewCustomerPanel extends GUIPanel
@@ -61,11 +62,67 @@ public class AddNewCustomerPanel extends GUIPanel
 
 	public AddNewCustomerPanel()
 	{
-		configurePanel();
+		// configurePanel();
+		initializePanel();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void configurePanel()
+	private void initializePanel()
+	{
+		GUIPanel header = configureHeader();
+		GUIPanel fieldsPanel = configureFieldsPanel();
+		GUIPanel btnPanel = configureBtnPanel();
+
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		add(header, c);
+
+		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 1;
+		add(fieldsPanel, c);
+
+		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 3;
+		c.gridwidth = 1;
+		add(btnPanel, c);
+	}
+
+	private GUIPanel configureBtnPanel()
+	{
+		exitbtn = new JButton("Exit");
+		exitbtn.addActionListener(new CloseViewCaller());
+		savebtn = new JButton("Save");
+		savebtn.addActionListener(new AddNewCustomer());
+		resetbtn = new JButton("Reset");
+		resetbtn.addActionListener(new ResetFieldsListener());
+
+		GUIPanel btnPanel = new GUIPanel(new FlowLayout());
+		btnPanel.add(exitbtn);
+		btnPanel.add(resetbtn);
+		btnPanel.add(savebtn);
+
+		return btnPanel;
+	}
+
+	@SuppressWarnings(
+	{ "unchecked", "rawtypes" })
+	private GUIPanel configureFieldsPanel()
 	{
 		JLabel accountNumberlbl = new JLabel("Account Number");
 		JLabel datelbl = new JLabel("Date");
@@ -92,13 +149,6 @@ public class AddNewCustomerPanel extends GUIPanel
 		/** weather the connection is private or commercial */
 		connectionTypes = new JComboBox(new CompanyInformation().getConnectionTypes());
 		connectionFeetxt = new JTextField(15);
-
-		exitbtn = new JButton("Exit");
-		exitbtn.addActionListener(new CloseViewCaller());
-		savebtn = new JButton("Save");
-		savebtn.addActionListener(new AddNewCustomer());
-		resetbtn = new JButton("Reset");
-		resetbtn.addActionListener(new ResetFieldsListener());
 
 		GUIPanel panel = new GUIPanel(new GridBagLayout());
 		panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -266,21 +316,28 @@ public class AddNewCustomerPanel extends GUIPanel
 		c.gridwidth = 1;
 		panel.add(connectionFeetxt, c);
 
-		GUIPanel btnPanel = new GUIPanel(new FlowLayout());
-		btnPanel.add(exitbtn);
-		btnPanel.add(resetbtn);
-		btnPanel.add(savebtn);
+		return panel;
+	}
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.CENTER;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 10;
-		c.gridwidth = 1;
-		panel.add(btnPanel, c);
+	private GUIPanel configureHeader()
+	{
+		JLabel headerLbl = new JLabel("Add new customer");
 
-		add(panel);
+		GUIPanel headerPanel = new GUIPanel(new GridBagLayout());
+		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+
+		GridBagConstraints hc = new GridBagConstraints();
+
+		hc.fill = GridBagConstraints.VERTICAL;
+		hc.anchor = GridBagConstraints.CENTER;
+		hc.weightx = 0.75;
+		hc.weighty = 0;
+		hc.gridx = 0;
+		hc.gridy = 1;
+		hc.gridwidth = 1;
+		headerPanel.add(headerLbl, hc);
+
+		return headerPanel;
 	}
 
 	private class ResetFieldsListener implements ActionListener
@@ -306,26 +363,31 @@ public class AddNewCustomerPanel extends GUIPanel
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String accountNumber = accountNumbertxt.getText();
-			if (isEmpty(accountNumber))
+			if (Helper.isEmpty(accountNumber))
 			{
 				new MessageDialog("Account number", "Please provide the account number", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			if (!isDigit(accountNumber))
+			if (!Helper.isDigit(accountNumber))
 			{
 				new MessageDialog("Account number", "Account number can contain only numbers-digits", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
 			String name = nametxt.getText();
-			if (isEmpty(name))
+			if (Helper.isEmpty(name))
 			{
 				new MessageDialog("Customer Name", "Customer Name cannot be empty", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
+			if (Helper.isDigit(name))
+			{
+				new MessageDialog("Customer Name", "Customer Name cannot be a number", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 
 			String address = addresstxt.getText();
-			if (isEmpty(address))
+			if (Helper.isEmpty(address))
 			{
 				new MessageDialog("Empty Address", "Please provide the address", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -333,14 +395,14 @@ public class AddNewCustomerPanel extends GUIPanel
 			String advance = advancetxt.getText();
 			String nicNumber = nicNumbertxt.getText();
 			String telNumber = telNumbertxt.getText();
-			if (!isEmpty(telNumber) && !isDigit(telNumber))
+			if (!Helper.isEmpty(telNumber) && !Helper.isDigit(telNumber))
 			{
 				new MessageDialog("Phone number", "Phone number can contain only numbers-digits", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			String connectionType = (String)connectionTypes.getSelectedItem();
+			String connectionType = (String) connectionTypes.getSelectedItem();
 			String connectionFee = connectionFeetxt.getText();
-			if (!isEmpty(connectionFee) && !isDigit(connectionFee))
+			if (!Helper.isEmpty(connectionFee) && !Helper.isDigit(connectionFee))
 			{
 				new MessageDialog("Conection fee", "Conection fee can contain only numbers-digits", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -351,18 +413,18 @@ public class AddNewCustomerPanel extends GUIPanel
 			c.setDate(datePicker.getDate());
 			c.setCustomerName(name);
 			c.setCustomerAddress(address);
-			if (!isEmpty(advance) && isDigit(advance))
+			if (!Helper.isEmpty(advance) && Helper.isDigit(advance))
 			{
 				c.setAdvance(Integer.parseInt(advance));
 			}
 			c.setNicNumber(nicNumber);
-			if (!isEmpty(telNumber) || isDigit(telNumber))
+			if (!Helper.isEmpty(telNumber) || Helper.isDigit(telNumber))
 			{
 				c.setTelNumber(Integer.parseInt(telNumber));
 			}
 			c.setConnectionType(connectionType);
 
-			if (!isEmpty(connectionFee) || isDigit(connectionFee))
+			if (!Helper.isEmpty(connectionFee) || Helper.isDigit(connectionFee))
 			{
 				c.setConnectionFee(Integer.parseInt(connectionFee));
 			}
@@ -382,28 +444,6 @@ public class AddNewCustomerPanel extends GUIPanel
 			{
 				new MessageDialog("Add new Customer Error", pair.getValue());
 			}
-		}
-
-		private boolean isDigit(String data)
-		{
-			boolean isDigit = false;
-			String regex = "\\d+";
-			isDigit = data.matches(regex);
-			return isDigit;
-		}
-
-		private boolean isEmpty(String str)
-		{
-			boolean isEmpty = false;
-			if (str == null)
-			{
-				isEmpty = true;
-			}
-			else if (str.trim().isEmpty())
-			{
-				isEmpty = true;
-			}
-			return isEmpty;
 		}
 	}
 }

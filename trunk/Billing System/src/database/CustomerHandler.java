@@ -19,6 +19,126 @@ public class CustomerHandler
 	{
 	}
 
+	public boolean deleteCustomer(int customerAccouontNumer) throws Exception
+	{
+		boolean deleted = false;
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		Statement st = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database. conection = null!");
+		}
+		try
+		{
+			st = conn.createStatement();
+			// The execute method return boolean value. check what is the
+			// meaning of it
+			st.execute("Delete from Customer where account_number = " + customerAccouontNumer + ";");
+			deleted = true;
+		}
+		catch (Exception e1)
+		{
+			Logger.getGlobal().severe("Unable to delete customer: " + e1.getMessage());
+			System.out.println("SQLException: " + e1.getMessage());
+			e1.printStackTrace();
+			throw new Exception("Unable to delete customer!" + e1.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (st != null)
+				{
+					st.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while closing the connection or statement: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new SQLException("Error occured while closing the connection or statement. " + e1.getMessage());
+			}
+		}
+		return deleted;
+	}
+
+	/**
+	 * Query the database
+	 * 
+	 * @param Account
+	 *            number of the customer to be searched in the database
+	 * @return A Customer or NULL if no record found
+	 * @throws Exception
+	 */
+	public Customer searchCustomer(int customerAccountNumber) throws Exception
+	{
+		Customer c = null;
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		PreparedStatement st = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database. conection = null!");
+		}
+		try
+		{
+			st = conn.prepareStatement("Select * from Customer where account_number = ?");
+			st.setInt(1, customerAccountNumber);
+			ResultSet rs = st.executeQuery();
+
+			if (rs.next())
+			{
+				c = new Customer();
+				c.setAccountNumber(customerAccountNumber);
+				c.setDate(rs.getDate("date"));
+				c.setCustomerName(rs.getString("name"));
+				c.setCustomerAddress(rs.getString("address"));
+				c.setAdvance(rs.getInt("advance"));
+				c.setNicNumber(rs.getString("nic_number"));
+				c.setTelNumber(rs.getInt("telephone"));
+				c.setConnectionType(rs.getString("connection_type"));
+				c.setConnectionFee(rs.getInt("connection_fee"));
+			}
+		}
+		catch (Exception e1)
+		{
+			Logger.getGlobal().severe("Unable to retrieve customer data from the database: " + e1.getMessage());
+			System.out.println("SQLException: " + e1.getMessage());
+			e1.printStackTrace();
+			throw new Exception("Unable to retrieve customer data from the database!" + e1.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (st != null)
+				{
+					st.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while closing the connection or statement: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new SQLException("Error occured while closing the connection or statement. " + e1.getMessage());
+			}
+		}
+		return c;
+	}
+
 	/**
 	 * Queries the database
 	 * 

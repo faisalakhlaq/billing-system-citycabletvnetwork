@@ -14,13 +14,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import database.callers.SearchCuctomerCaller;
+
+@SuppressWarnings("serial")
 public class SearchCustomerPanel extends GUIPanel
 {
-	private static final long serialVersionUID = -6291947031059895308L;
-
-	private JTextField nametxt;
-
-	private JTextField nicNumbertxt;
+	private JTextField accountNumbertxt;
 
 	private JButton resetbtn;
 
@@ -30,13 +29,17 @@ public class SearchCustomerPanel extends GUIPanel
 
 	private JButton getBillbtn;
 
-	// TODO can it be singleton???
 	public SearchCustomerPanel()
+	{
+		intitializePanel();
+	}
+
+	private void intitializePanel()
 	{
 		GUIPanel header = configureHeader();
 		GUIPanel fieldsPanel = configureFieldsPanel();
 		GUIPanel btnPanel = configureBtnPanel();
-		
+
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -68,32 +71,39 @@ public class SearchCustomerPanel extends GUIPanel
 		add(btnPanel, c);
 	}
 
+	public String getAccoutNumber()
+	{
+		return accountNumbertxt.getText();
+	}
+
 	private GUIPanel configureBtnPanel()
 	{
 		resetbtn = new JButton("Reset");
 		resetbtn.addActionListener(new ResetFieldsListener());
+
 		searchbtn = new JButton("Search");
+		searchbtn.addActionListener(new SearchCuctomerCaller(SearchCustomerPanel.this));
+
+		getBillbtn = new JButton("Get Bill");
+
 		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
-		getBillbtn = new JButton("Get Bill");
 
 		GUIPanel p = new GUIPanel(new FlowLayout());
 
-		p.add(exitbtn);
 		p.add(resetbtn);
 		p.add(searchbtn);
 		p.add(getBillbtn);
+		p.add(exitbtn);
 
 		return p;
 	}
 
 	private GUIPanel configureFieldsPanel()
 	{
-		JLabel nameLbl = new JLabel("Customer Name");
-		JLabel nicNumberLbl = new JLabel("N.I.C Number");
+		JLabel accountNumberLbl = new JLabel("Customer Account Number");
 
-		nametxt = new JTextField(20);
-		nicNumbertxt = new JTextField(20);
+		accountNumbertxt = new JTextField(10);
 
 		GUIPanel p = new GUIPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -106,8 +116,8 @@ public class SearchCustomerPanel extends GUIPanel
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
-		p.add(nameLbl, c);
-		//
+		p.add(accountNumberLbl, c);
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LINE_END;
 		c.weightx = 0.75;
@@ -115,25 +125,7 @@ public class SearchCustomerPanel extends GUIPanel
 		c.gridx = 1;
 		c.gridy = 1;
 		c.gridwidth = 1;
-		p.add(nametxt, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		p.add(nicNumberLbl, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		p.add(nicNumbertxt, c);
+		p.add(accountNumbertxt, c);
 
 		return p;
 	}
@@ -164,8 +156,7 @@ public class SearchCustomerPanel extends GUIPanel
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			nametxt.setText(null);
-			nicNumbertxt.setText(null);
+			accountNumbertxt.setText(null);
 		}
 	}
 }

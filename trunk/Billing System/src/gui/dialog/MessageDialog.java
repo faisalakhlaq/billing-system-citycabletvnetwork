@@ -9,11 +9,14 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("serial")
 public class MessageDialog extends BillingSystemAbstractDialog
 {
-	private static final long serialVersionUID = -5429787334175111405L;
-
 	private int messageType = JOptionPane.ERROR_MESSAGE;
+
+	public MessageDialog()
+	{
+	}
 
 	public MessageDialog(String title, String message)
 	{

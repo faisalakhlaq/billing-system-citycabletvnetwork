@@ -18,4 +18,5 @@ public class GUIPanel extends JPanel
 	{
 		super(layout);
 	}
+
 }

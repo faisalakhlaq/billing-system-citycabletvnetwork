@@ -5,8 +5,8 @@ import gui.GUIMenuBar;
 import gui.caller.AboutMenuItemCaller;
 import gui.caller.ExitSystemCaller;
 import gui.caller.ShowStatusbarCaller;
-import gui.panels.callers.AddCustomerCaller;
-import gui.panels.callers.SearchCustomerCaller;
+import gui.panels.callers.AddCustomerPanelCaller;
+import gui.panels.callers.SearchCustomerPanelCaller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -19,10 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.border.EtchedBorder;
 
-import database.ViewAllCustomersCaller;
-import database.callers.DeleteCustomerCaller;
-
-
+import database.callers.ViewAllCustomersCaller;
 
 public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 {
@@ -76,19 +73,19 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		JMenuItem helpMenuItem = addMenuItem(help, "About");
 		helpMenuItem.addActionListener(new AboutMenuItemCaller());
 	}
-	
+
 	private void configureCustomerMenu(JMenu customerMenu)
 	{
 		customerMenu.setMnemonic(KeyEvent.VK_C);
-		
-		JMenuItem addCustomerMenuItem = addMenuItem(customerMenu, "Add Customer");
-		addCustomerMenuItem.addActionListener(new AddCustomerCaller());
 
-		JMenuItem deleteCustomerMenuItem = addMenuItem(customerMenu, "Delete Customer");
-		deleteCustomerMenuItem.addActionListener(new DeleteCustomerCaller());
+		JMenuItem addCustomerMenuItem = addMenuItem(customerMenu, "Add Customer");
+		addCustomerMenuItem.addActionListener(new AddCustomerPanelCaller());
+
+		JMenuItem deleteCustomerMenuItem = addMenuItem(customerMenu, "Search and Delete Customer");
+		deleteCustomerMenuItem.addActionListener(new SearchCustomerPanelCaller());
 
 		JMenuItem searchCustomerMenuItem = addMenuItem(customerMenu, "Search Customer");
-		searchCustomerMenuItem.addActionListener(new SearchCustomerCaller());
+		searchCustomerMenuItem.addActionListener(new SearchCustomerPanelCaller());
 
 		JMenuItem viewAllCustomerMenuItem = addMenuItem(customerMenu, "View All Customers");
 		viewAllCustomerMenuItem.addActionListener(new ViewAllCustomersCaller());
@@ -123,18 +120,18 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 	{
 		billMenu.setMnemonic(KeyEvent.VK_B); // Mnemonic to access the menu
 		JMenuItem printAllBillsMenuItem = addMenuItem(billMenu, "Print All Bills");
-//		exitMenuItem.addActionListener(new ExitSystemCaller());
+		// exitMenuItem.addActionListener(new ExitSystemCaller());
 		ImageIcon exitIcon = new ImageIcon(getClass().getResource("/resources/print.png"));
 		printAllBillsMenuItem.setIcon(exitIcon);
 		printAllBillsMenuItem.setToolTipText("Print out all Bills");
 
 		JMenuItem searchCustomerBillMenuItem = addMenuItem(billMenu, "Customer Bill");
-//		exitMenuItem.addActionListener(new ExitSystemCaller());
+		// exitMenuItem.addActionListener(new ExitSystemCaller());
 		ImageIcon searchIcon = new ImageIcon(getClass().getResource("/resources/search.png"));
 		searchCustomerBillMenuItem.setIcon(searchIcon);
 		searchCustomerBillMenuItem.setToolTipText("Search a Customer's bill");
 	}
-	
+
 	@Override
 	public void setOwningView(BillingSystemView owningView)
 	{
