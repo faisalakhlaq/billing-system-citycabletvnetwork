@@ -13,8 +13,7 @@ public class DisplayPrintBillPanelCaller implements ActionListener
 	public void actionPerformed(ActionEvent arg0)
 	{
 		BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-		desktop.addTab("Print Bill", new PrintBillPanel());
-		//TODO currently opened window should be visible and in focus
+		desktop.addPanel("Print Bill", new PrintBillPanel());
 	}
 
 }

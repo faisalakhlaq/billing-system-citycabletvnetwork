@@ -2,7 +2,7 @@ package model;
 
 import java.util.Date;
 
-public class Customer
+public class Customer implements ModelObject
 {
 	private int accountNumber;
 
@@ -24,6 +24,20 @@ public class Customer
 
 	public Customer()
 	{
+
+	}
+
+	public Customer(int acNumber, Date d, String name, String address, int advance, String nic, int tel, String conType, int conFee)
+	{
+		accountNumber = acNumber;
+		date = d;
+		customerName = name;
+		customerAddress = address;
+		this.advance = advance;
+		nicNumber = nic;
+		telNumber = tel;
+		connectionType = conType;
+		connectionFee = conFee;
 
 	}
 
@@ -117,4 +131,20 @@ public class Customer
 		this.advance = connectionFee;
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+		boolean equal = false;
+		if (!(obj instanceof Customer)) return equal;
+
+		Customer c = (Customer) obj;
+
+		if (this.accountNumber == c.getAccountNumber() && this.date.equals(c.getDate()) && this.customerName.equals(c.getCustomerName())
+				&& this.customerAddress.equals(c.getCustomerAddress()) && this.advance == c.getAdvance() && this.nicNumber.equals(c.getNicNumber())
+				&& this.telNumber == c.getTelNumber() && this.connectionType.equals(c.getConnectionType()) && this.connectionFee == c.getConnectionFee())
+		{
+			equal = true;
+		}
+		return equal;
+	}
 }

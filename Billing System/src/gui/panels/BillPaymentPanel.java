@@ -7,45 +7,65 @@ import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import model.Customer;
+import model.ModelObject;
+
+import org.jdesktop.swingx.JXDatePicker;
+
+@SuppressWarnings("serial")
 public class BillPaymentPanel extends GUIPanel
 {
-	private static final long serialVersionUID = 3496878284152665018L;
+	private Customer customer = null;
 
-	JButton payBillbtn;
+	private JButton payBillbtn;
 
-	JButton exitbtn;
+	private JButton exitbtn;
 
-	JTextField customerNametxt;
+	private JTextField customerNametxt;
 
-	JTextField nicNumbertxt;
+	private JTextField accountNumbertxt;
 
-	JComboBox<String> billingMonthCombobox;
+	private JComboBox<String> billingMonthCombobox;
 
-	JTextField amounttxt;
+	private JTextField amounttxt;
 
-	JTextField surchargetxt;
+	private JTextField surchargetxt;
 
-	JTextField advertisementBilltxt;
+	private JTextField advertisementBilltxt;
 
-	JTextField paymentDatetxt; // Change it to clock
+	private JXDatePicker datePicker;
 
-	// JComboBox<Vector<Integer>> billingYearCombobox;
-	JComboBox<String> billingYearCombobox; // change data type
+	private JComboBox<String> billingYearCombobox; // change data type
 
-	JTextField customerJoinDatetxt; // Change it to clock
+	private JTextField customerJoinDatetxt;
+
+	private JTextField connectionTypetxt;
 
 	public BillPaymentPanel()
+	{
+		initializePanel();
+	}
+
+	public BillPaymentPanel(ModelObject obj)
+	{
+		customer = (Customer) obj;
+		initializePanel();
+	}
+
+	private void initializePanel()
 	{
 		GUIPanel header = configureHeader();
 		GUIPanel fieldsPanel = configureFieldsPanel();
 		GUIPanel btnPanel = configureButtonPanel();
-		
+
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -75,29 +95,39 @@ public class BillPaymentPanel extends GUIPanel
 		c.gridy = 3;
 		c.gridwidth = 1;
 		add(btnPanel, c);
+
+		initTextFields();
 	}
 
 	private GUIPanel configureFieldsPanel()
 	{
 		JLabel customerNameLbl = new JLabel("Customer Name");
-		JLabel nicNumberLbl = new JLabel("N.I.C Number");
+		JLabel accountNummberLbl = new JLabel("Account Number");
+		JLabel customerJoinDateLbl = new JLabel("Customer Join Date");
+		JLabel connectionTypeLbl = new JLabel("Connection Type");
+
+		JLabel paymentDateLbl = new JLabel("Payment Date");
 		JLabel billingMonthLbl = new JLabel("Billing Month");
+		JLabel billingYearLbl = new JLabel("Billing Year");
+
 		JLabel amountLbl = new JLabel("Amount");
 		JLabel surchargeLbl = new JLabel("Surcharge");
 		JLabel advertisementBillLbl = new JLabel("Advertisement Bill");
-		JLabel paymentDateLbl = new JLabel("Payment Date");
-		JLabel billingYearLbl = new JLabel("Billing Year");
-		JLabel customerJoinDateLbl = new JLabel("Customer Join Date");
 
 		customerNametxt = new JTextField(20);
-		nicNumbertxt = new JTextField(20);
-		// JComboBox<String> billingMonthCombobox;
+		accountNumbertxt = new JTextField(20);
+		String[] months =
+		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTUBER", "NOVEMBER", "DECEMBER" };
+		billingMonthCombobox = new JComboBox<String>(months);
 		amounttxt = new JTextField(20);
 		surchargetxt = new JTextField(20);
 		advertisementBilltxt = new JTextField(20);
-		paymentDatetxt = new JTextField(20); // TODO Change it to clock
+		datePicker = new JXDatePicker();
+		datePicker.setDate(Calendar.getInstance().getTime());
+		datePicker.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
 		// billingYearCombobox = new JComboBox<String>(null);
-		customerJoinDatetxt = new JTextField(20); // TODO Change it to clock
+		customerJoinDatetxt = new JTextField(20);
+		connectionTypetxt = new JTextField(20);
 
 		GUIPanel p = new GUIPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -128,7 +158,7 @@ public class BillPaymentPanel extends GUIPanel
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 1;
-		p.add(nicNumberLbl, c);
+		p.add(accountNummberLbl, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LINE_END;
@@ -137,122 +167,14 @@ public class BillPaymentPanel extends GUIPanel
 		c.gridx = 1;
 		c.gridy = 2;
 		c.gridwidth = 1;
-		p.add(nicNumbertxt, c);
+		p.add(accountNumbertxt, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
+		c.weightx = 0.75;
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 3;
-		c.gridwidth = 1;
-		p.add(billingMonthLbl, c);
-
-		// c.fill = GridBagConstraints.HORIZONTAL;
-		// c.anchor = GridBagConstraints.LINE_END;
-		// c.weightx = 0.75;
-		// c.weighty = 0;
-		// c.gridx = 1;
-		// c.gridy = 3;
-		// c.gridwidth = 1;
-		// p.add(billingMonthLbl, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 4;
-		c.gridwidth = 1;
-		p.add(amountLbl, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 4;
-		c.gridwidth = 1;
-		p.add(amounttxt, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 5;
-		c.gridwidth = 1;
-		p.add(surchargeLbl, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 5;
-		c.gridwidth = 1;
-		p.add(surchargetxt, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 6;
-		c.gridwidth = 1;
-		p.add(advertisementBillLbl, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 6;
-		c.gridwidth = 1;
-		p.add(advertisementBilltxt, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 7;
-		c.gridwidth = 1;
-		p.add(paymentDateLbl, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 7;
-		c.gridwidth = 1;
-		p.add(paymentDatetxt, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 8;
-		c.gridwidth = 1;
-		p.add(billingYearLbl, c);
-
-		// c.fill = GridBagConstraints.HORIZONTAL;
-		// c.anchor = GridBagConstraints.LINE_END;
-		// c.weightx = 0.75;
-		// c.weighty = 0;
-		// c.gridx = 1;
-		// c.gridy = 8;
-		// c.gridwidth = 1;
-		// p.add(billingYeartxt, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 9;
 		c.gridwidth = 1;
 		p.add(customerJoinDateLbl, c);
 
@@ -261,9 +183,135 @@ public class BillPaymentPanel extends GUIPanel
 		c.weightx = 0.75;
 		c.weighty = 0;
 		c.gridx = 1;
-		c.gridy = 9;
+		c.gridy = 3;
 		c.gridwidth = 1;
 		p.add(customerJoinDatetxt, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 4;
+		c.gridwidth = 1;
+		p.add(connectionTypeLbl, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 4;
+		c.gridwidth = 1;
+		p.add(connectionTypetxt, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 5;
+		c.gridwidth = 1;
+		p.add(paymentDateLbl, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 5;
+		c.gridwidth = 1;
+		p.add(datePicker, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.25;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 6;
+		c.gridwidth = 1;
+		p.add(billingMonthLbl, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 6;
+		c.gridwidth = 1;
+		p.add(billingMonthCombobox, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 7;
+		c.gridwidth = 1;
+		p.add(billingYearLbl, c);
+
+		// c.fill = GridBagConstraints.HORIZONTAL;
+		// c.anchor = GridBagConstraints.LINE_END;
+		// c.weightx = 0.75;
+		// c.weighty = 0;
+		// c.gridx = 1;
+		// c.gridy = 7;
+		// c.gridwidth = 1;
+		// p.add(billingYeartxt, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 8;
+		c.gridwidth = 1;
+		p.add(amountLbl, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.25;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 8;
+		c.gridwidth = 1;
+		p.add(amounttxt, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 9;
+		c.gridwidth = 1;
+		p.add(surchargeLbl, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 9;
+		c.gridwidth = 1;
+		p.add(surchargetxt, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 10;
+		c.gridwidth = 1;
+		p.add(advertisementBillLbl, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 10;
+		c.gridwidth = 1;
+		p.add(advertisementBilltxt, c);
 
 		return p;
 	}
@@ -302,4 +350,20 @@ public class BillPaymentPanel extends GUIPanel
 
 		return headerPanel;
 	}
+
+	/**
+	 * insert the values of ModelObject in the text fields
+	 * */
+	private void initTextFields()
+	{
+		if (customer == null)
+		{
+			return;
+		}
+		customerNametxt.setText(customer.getCustomerName());
+		accountNumbertxt.setText(String.valueOf(customer.getAccountNumber()));
+		customerJoinDatetxt.setText(customer.getDate().toString());
+		connectionTypetxt.setText(String.valueOf(customer.getConnectionType()));
+	}
+
 }

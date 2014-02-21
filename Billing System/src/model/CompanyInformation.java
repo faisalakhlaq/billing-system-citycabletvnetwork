@@ -1,6 +1,6 @@
 package model;
 
-public class CompanyInformation
+public class CompanyInformation implements ModelObject
 {
 	private String companyName;
 
@@ -13,7 +13,9 @@ public class CompanyInformation
 	private String termsAndCondition;
 
 	private String openingHours;
-	private final String[] connectionTypes = {"Private", "Commercial"};
+
+	private final String[] connectionTypes =
+	{ "Private", "Commercial" };
 
 	public CompanyInformation()
 	{

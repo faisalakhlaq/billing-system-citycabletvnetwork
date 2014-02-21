@@ -1,0 +1,11 @@
+CREATE TABLE CUSTOMER (
+account_number int  NOT NULL PRIMARY KEY,
+date DATE,
+name VARCHAR(20) NOT NULL,
+address VARCHAR(60) NOT NULL,
+advance INT,
+nic_number VARCHAR(20),
+telephone int,
+connection_type VARCHAR(15),
+connection_fee int
+);

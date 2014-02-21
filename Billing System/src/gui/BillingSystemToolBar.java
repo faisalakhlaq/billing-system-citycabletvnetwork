@@ -2,17 +2,13 @@ package gui;
 
 import gui.caller.ExitSystemCaller;
 import gui.caller.StartCalculatorCaller;
-import gui.panels.callers.AddCustomerCaller;
+import gui.panels.callers.AddCustomerPanelCaller;
 import gui.panels.callers.DisplayPrintBillPanelCaller;
-import gui.panels.callers.SearchCustomerCaller;
+import gui.panels.callers.SearchCustomerPanelCaller;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
-
-import database.callers.DeleteCustomerCaller;
-
-
 
 public class BillingSystemToolBar extends JToolBar
 {
@@ -21,7 +17,7 @@ public class BillingSystemToolBar extends JToolBar
 	public BillingSystemToolBar()
 	{
 		addToolBarItems();
-//		setFloatable(false);
+		// setFloatable(false);
 	}
 
 	private void addToolBarItems()
@@ -46,7 +42,7 @@ public class BillingSystemToolBar extends JToolBar
 		printBillBtn.setIcon(addIcon);
 		printBillBtn.addActionListener(new DisplayPrintBillPanelCaller());
 		printBillBtn.setToolTipText("Print Bill");
-		this.add(printBillBtn);	
+		this.add(printBillBtn);
 	}
 
 	private void addCalculatorBtn()
@@ -56,7 +52,7 @@ public class BillingSystemToolBar extends JToolBar
 		calculatorBtn.setIcon(calculatorIcon);
 		calculatorBtn.addActionListener(new StartCalculatorCaller());
 		calculatorBtn.setToolTipText("Start calculator");
-		this.add(calculatorBtn);			
+		this.add(calculatorBtn);
 	}
 
 	private void addAddCustomerBtn()
@@ -64,9 +60,9 @@ public class BillingSystemToolBar extends JToolBar
 		JButton addCustomerBtn = new JButton();
 		ImageIcon addIcon = new ImageIcon(getClass().getResource("/resources/add.gif"));
 		addCustomerBtn.setIcon(addIcon);
-		addCustomerBtn.addActionListener(new AddCustomerCaller());
+		addCustomerBtn.addActionListener(new AddCustomerPanelCaller());
 		addCustomerBtn.setToolTipText("Add new Customer");
-		this.add(addCustomerBtn);			
+		this.add(addCustomerBtn);
 	}
 
 	private void addDeleteCustomerBtn()
@@ -74,9 +70,9 @@ public class BillingSystemToolBar extends JToolBar
 		JButton delCustomerBtn = new JButton();
 		ImageIcon delIcon = new ImageIcon(getClass().getResource("/resources/delete.png"));
 		delCustomerBtn.setIcon(delIcon);
-		delCustomerBtn.addActionListener(new DeleteCustomerCaller());
-		delCustomerBtn.setToolTipText("Delete Customer");
-		this.add(delCustomerBtn);		
+		delCustomerBtn.addActionListener(new SearchCustomerPanelCaller());
+		delCustomerBtn.setToolTipText("Search and delete Customer");
+		this.add(delCustomerBtn);
 	}
 
 	private void addSearchCustomerButton()
@@ -84,7 +80,7 @@ public class BillingSystemToolBar extends JToolBar
 		JButton searchCustomerBtn = new JButton();
 		ImageIcon searchIcon = new ImageIcon(getClass().getResource("/resources/search.png"));
 		searchCustomerBtn.setIcon(searchIcon);
-		searchCustomerBtn.addActionListener(new SearchCustomerCaller());
+		searchCustomerBtn.addActionListener(new SearchCustomerPanelCaller());
 		searchCustomerBtn.setToolTipText("Search Customer");
 		this.add(searchCustomerBtn);
 	}

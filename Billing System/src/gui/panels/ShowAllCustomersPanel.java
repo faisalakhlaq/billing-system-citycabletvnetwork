@@ -17,20 +17,22 @@ import javax.swing.JTable;
 
 import model.Customer;
 import table.CustomerTableModel;
+import table.TableSorter;
 
 public class ShowAllCustomersPanel extends GUIPanel
 {
 	private static final long serialVersionUID = 7502960386600952711L;
 
 	private JButton exitbtn;
+
 	private JButton refreshbtn;
 
-	private JTable customerTable;
+	// private JTable customerTable;
 
 	private Vector<Customer> customersList;
 
 	private String[] columnNames =
-	{ "Account Number", "Date", "Name", "Address", "NIC number", "Advance", "Telephone Number", "Connection Fee", "Conection Type" };
+	{ "Account Number", "Date", "Name", "Address", "Advance", "NIC number", "Telephone Number", "Connection Fee", "Conection Type" };
 
 	public ShowAllCustomersPanel(Vector<Customer> customers)
 	{
@@ -87,12 +89,30 @@ public class ShowAllCustomersPanel extends GUIPanel
 
 	private GUIPanel configureFieldsPanel()
 	{
-		customerTable = new JTable();
+		// customerTable = new JTable();
 		CustomerTableModel model = new CustomerTableModel(customersList, columnNames);
-		customerTable.setModel(model);
+		// customerTable.setModel(model);
 
-		JScrollPane scrollPane = new JScrollPane(customerTable);
-		scrollPane.setPreferredSize(new Dimension(800, 150));
+		// //////////////////////////////////////////////////////////////////////
+
+		/*
+		 * Add this code after adding the TableSorter
+		 */
+		TableSorter sorter = new TableSorter(model); // ADDED THIS
+		// JTable table = new JTable(new MyTableModel()); //OLD
+		JTable table = new JTable(sorter); // NEW
+		sorter.setTableHeader(table.getTableHeader()); // ADDED THIS
+		// table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+
+		// Set up tool tips for column headers.
+		table.getTableHeader().setToolTipText("Click to specify sorting; Control-Click to specify secondary sorting");
+
+		// Create the scroll pane and add the table to it.
+		JScrollPane scrollPane = new JScrollPane(table);
+
+		// //////////////////////////////////////////////////////////////////////
+		// JScrollPane scrollPane = new JScrollPane(customerTable);
+		scrollPane.setPreferredSize(new Dimension(1000, 500));
 
 		GUIPanel p = new GUIPanel(new GridBagLayout());
 		p.setOpaque(true);

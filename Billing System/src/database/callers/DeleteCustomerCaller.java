@@ -1,19 +1,44 @@
 package database.callers;
 
-import gui.BillingSystemDesktopPane;
-import gui.panels.BillPaymentPanel;
+import gui.caller.CloseViewCaller;
+import gui.dialog.MessageDialog;
+import database.CustomerHandler;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-public class DeleteCustomerCaller implements ActionListener
+public class DeleteCustomerCaller
 {
-// TODO test implementation
-	@Override
-	public void actionPerformed(ActionEvent arg0)
+
+	public static void perform(int customerAccountNumber)
 	{
-		// TODO Auto-generated method stub
-		BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-		desktop.addTab("Delete Customer", new BillPaymentPanel());
+		// if (panel == null)
+		// {
+		// new MessageDialog("Error",
+		// "Sorry the customer cannot be deleted. Panel = null!");
+		// return;
+		// }
+		// Customer c = panel.getCustomer();
+		// if (c == null)
+		// {
+		// new MessageDialog("Error",
+		// "Sorry the customer cannot be deleted. Customer = null!");
+		// return;
+		// }
+
+		CustomerHandler handler = new CustomerHandler();
+		boolean deleted;
+		try
+		{
+			deleted = handler.deleteCustomer(customerAccountNumber);
+
+			if (deleted)
+			{
+				new MessageDialog("Deleted", "Customer is deleted!");
+				CloseViewCaller.perform(); // close the view after customer
+											// deletion
+			}
+		}
+		catch (Exception ex)
+		{
+			new MessageDialog("Error", ex.getMessage());
+		}
 	}
 }

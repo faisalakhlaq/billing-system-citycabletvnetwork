@@ -11,8 +11,15 @@ public class CloseViewCaller implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		// BillingSystemDesktopPane instance =
+		// BillingSystemDesktopPane.getInstance();
+		// instance.removeTabAt(instance.getSelectedIndex());
+		perform();
+	}
+
+	public static void perform()
+	{
 		BillingSystemDesktopPane instance = BillingSystemDesktopPane.getInstance();
 		instance.removeTabAt(instance.getSelectedIndex());
 	}
-
 }
