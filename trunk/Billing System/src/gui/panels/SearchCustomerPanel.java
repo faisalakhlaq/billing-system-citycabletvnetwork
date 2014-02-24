@@ -1,6 +1,5 @@
 package gui.panels;
 
-import gui.GUIPanel;
 import gui.caller.CloseViewCaller;
 
 import java.awt.ComponentOrientation;
@@ -17,7 +16,7 @@ import javax.swing.JTextField;
 import database.callers.SearchCuctomerCaller;
 
 @SuppressWarnings("serial")
-public class SearchCustomerPanel extends GUIPanel
+public class SearchCustomerPanel extends BasicGuiPanel
 {
 	private JTextField accountNumbertxt;
 
@@ -36,9 +35,9 @@ public class SearchCustomerPanel extends GUIPanel
 
 	private void intitializePanel()
 	{
-		GUIPanel header = configureHeader();
-		GUIPanel fieldsPanel = configureFieldsPanel();
-		GUIPanel btnPanel = configureBtnPanel();
+		BasicGuiPanel header = configureHeader();
+		BasicGuiPanel fieldsPanel = configureFieldsPanel();
+		BasicGuiPanel btnPanel = configureBtnPanel();
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -76,7 +75,7 @@ public class SearchCustomerPanel extends GUIPanel
 		return accountNumbertxt.getText();
 	}
 
-	private GUIPanel configureBtnPanel()
+	private BasicGuiPanel configureBtnPanel()
 	{
 		resetbtn = new JButton("Reset");
 		resetbtn.addActionListener(new ResetFieldsListener());
@@ -89,7 +88,7 @@ public class SearchCustomerPanel extends GUIPanel
 		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
 
-		GUIPanel p = new GUIPanel(new FlowLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
 		p.add(resetbtn);
 		p.add(searchbtn);
@@ -99,13 +98,13 @@ public class SearchCustomerPanel extends GUIPanel
 		return p;
 	}
 
-	private GUIPanel configureFieldsPanel()
+	private BasicGuiPanel configureFieldsPanel()
 	{
 		JLabel accountNumberLbl = new JLabel("Customer Account Number");
 
 		accountNumbertxt = new JTextField(10);
 
-		GUIPanel p = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -130,11 +129,11 @@ public class SearchCustomerPanel extends GUIPanel
 		return p;
 	}
 
-	private GUIPanel configureHeader()
+	private BasicGuiPanel configureHeader()
 	{
 		JLabel headerLbl = new JLabel("Search Customer");
 
-		GUIPanel headerPanel = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
 		GridBagConstraints hc = new GridBagConstraints();

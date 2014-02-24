@@ -1,6 +1,5 @@
 package gui.panels;
 
-import gui.GUIPanel;
 import gui.caller.CloseViewCaller;
 import gui.dialog.MessageDialog;
 import gui.panels.callers.BillPaymentPanelCaller;
@@ -24,7 +23,7 @@ import utils.CustomPair;
 import utils.Helper;
 import database.callers.DeleteCustomerCaller;
 
-public class CustomerPanel extends GUIPanel
+public class CustomerPanel extends BasicGuiPanel
 {
 	private static final long serialVersionUID = 780942135536586736L;
 
@@ -75,9 +74,9 @@ public class CustomerPanel extends GUIPanel
 
 	private void initializePanel()
 	{
-		GUIPanel header = configureHeader();
-		GUIPanel fieldsPanel = configureFieldsPanel();
-		GUIPanel btnPanel = configureBtnPanel();
+		BasicGuiPanel header = configureHeader();
+		BasicGuiPanel fieldsPanel = configureFieldsPanel();
+		BasicGuiPanel btnPanel = configureBtnPanel();
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -180,7 +179,7 @@ public class CustomerPanel extends GUIPanel
 		}
 	}
 
-	private GUIPanel configureBtnPanel()
+	private BasicGuiPanel configureBtnPanel()
 	{
 		billHistorybtn = new JButton("Bill History");
 
@@ -201,7 +200,7 @@ public class CustomerPanel extends GUIPanel
 
 		showCancelbtn();
 
-		GUIPanel p = new GUIPanel(new FlowLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
 		p.add(payBillbtn);
 		p.add(billHistorybtn);
@@ -213,7 +212,7 @@ public class CustomerPanel extends GUIPanel
 		return p;
 	}
 
-	private GUIPanel configureFieldsPanel()
+	private BasicGuiPanel configureFieldsPanel()
 	{
 		JLabel customerNameLbl = new JLabel("Customer Name");
 		JLabel nicNumberLbl = new JLabel("N.I.C Number");
@@ -235,7 +234,7 @@ public class CustomerPanel extends GUIPanel
 		connectionTypetxt = new JTextField(20);
 		connectionFeetxt = new JTextField(20);
 
-		GUIPanel p = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -412,11 +411,11 @@ public class CustomerPanel extends GUIPanel
 		cancelbtn.setVisible(editMode);
 	}
 
-	private GUIPanel configureHeader()
+	private BasicGuiPanel configureHeader()
 	{
 		JLabel headerLbl = new JLabel("Customer Information");
 
-		GUIPanel headerPanel = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
 		GridBagConstraints hc = new GridBagConstraints();
@@ -540,9 +539,12 @@ public class CustomerPanel extends GUIPanel
 		{
 			if (isInEditMode())
 			{
-				MessageDialog msgDialog = new MessageDialog("Editing", "Do you really want to abort editing and close this view", JOptionPane.YES_NO_OPTION);
-				// TODO make a new message dialog which returns the user
-				// selection
+				MessageDialog msgDialog = new MessageDialog();
+				int selection = msgDialog.showConfirmDialog("Editing", "Do you really want to abort editing and close this view");
+				if (selection == JOptionPane.OK_OPTION)
+				{
+					CloseViewCaller.perform();
+				}
 			}
 			else
 			{
@@ -605,7 +607,6 @@ public class CustomerPanel extends GUIPanel
 
 	private class DeleteCustomer implements ActionListener
 	{
-
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
@@ -615,9 +616,12 @@ public class CustomerPanel extends GUIPanel
 			}
 			else
 			{
-				MessageDialog msgDialog = new MessageDialog("Confirm deleteion", "Are you sure you want to delete the customer");
-				// TODO Confirm and delete
-				DeleteCustomerCaller.perform(customer.getAccountNumber());
+				MessageDialog msgDialog = new MessageDialog();
+				int selection = msgDialog.showConfirmDialog("Confirm deleteion", "Are you sure you want to delete the customer");
+				if (selection == JOptionPane.OK_OPTION)
+				{
+					DeleteCustomerCaller.perform(customer.getAccountNumber());
+				}
 			}
 		}
 	}

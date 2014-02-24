@@ -2,12 +2,12 @@ package gui.views;
 
 import gui.BillingSystemDesktopPane;
 import gui.BillingSystemStatusBar;
-import gui.BillingSystemToolBar;
 import gui.BillingSystemView;
 import gui.GUIFrame;
-import gui.GUIPanel;
 import gui.menubar.MainFrameMenuBar;
+import gui.panels.BasicGuiPanel;
 import gui.panels.CompanyInfoBannerPanel;
+import gui.toolbar.BillingSystemToolBar;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -16,7 +16,10 @@ import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
+
+import model.CompanyInformation;
 
 /**
  * This is the main JFrame of the application
@@ -54,7 +57,8 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 	{
 		if (instance == null)
 		{
-			instance = new BillingSystemMainFrame("City Calble Network");
+			CompanyInformation info = new CompanyInformation();
+			instance = new BillingSystemMainFrame(info.getCompanyName());
 		}
 		return instance;
 	}
@@ -65,6 +69,8 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 		setDefaultLookAndFeelDecorated(true);
 		Toolkit toolkit = getToolkit();
 		Dimension screensize = toolkit.getScreenSize();
+		// TODO the screen size is fixed which is not good
+		screensize.setSize(screensize.getWidth(), screensize.getHeight() - 40);
 		setPreferredSize(screensize);
 		setMinimumSize(screensize);
 		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/billing_system_icon.png"));
@@ -76,9 +82,9 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 		BillingSystemDesktopPane desktopPane = BillingSystemDesktopPane.getInstance();
 		CompanyInfoBannerPanel bannerPanel = new CompanyInfoBannerPanel();
 		Container pane = getContentPane();
-		GUIPanel p = new GUIPanel(new BorderLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new BorderLayout());
 		p.add(BorderLayout.NORTH, bannerPanel);
-		p.add(BorderLayout.CENTER, desktopPane);
+		p.add(BorderLayout.CENTER, new JScrollPane(desktopPane));
 		pane.add(BorderLayout.CENTER, p);
 	}
 

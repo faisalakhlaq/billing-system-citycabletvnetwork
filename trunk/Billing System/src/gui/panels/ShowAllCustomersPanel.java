@@ -1,6 +1,5 @@
 package gui.panels;
 
-import gui.GUIPanel;
 import gui.caller.CloseViewCaller;
 
 import java.awt.ComponentOrientation;
@@ -19,7 +18,7 @@ import model.Customer;
 import table.CustomerTableModel;
 import table.TableSorter;
 
-public class ShowAllCustomersPanel extends GUIPanel
+public class ShowAllCustomersPanel extends BasicGuiPanel
 {
 	private static final long serialVersionUID = 7502960386600952711L;
 
@@ -37,9 +36,9 @@ public class ShowAllCustomersPanel extends GUIPanel
 	public ShowAllCustomersPanel(Vector<Customer> customers)
 	{
 		customersList = customers;
-		GUIPanel header = configureHeader();
-		GUIPanel fieldsPanel = configureFieldsPanel();
-		GUIPanel btnPanel = configureBtnPanel();
+		BasicGuiPanel header = configureHeader();
+		BasicGuiPanel fieldsPanel = configureFieldsPanel();
+		BasicGuiPanel btnPanel = configureBtnPanel();
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -72,7 +71,7 @@ public class ShowAllCustomersPanel extends GUIPanel
 		add(btnPanel, c);
 	}
 
-	private GUIPanel configureBtnPanel()
+	private BasicGuiPanel configureBtnPanel()
 	{
 		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
@@ -80,14 +79,14 @@ public class ShowAllCustomersPanel extends GUIPanel
 		refreshbtn = new JButton("Refresh");
 		refreshbtn.addActionListener(new CloseViewCaller());
 
-		GUIPanel p = new GUIPanel(new FlowLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 		p.add(refreshbtn);
 		p.add(exitbtn);
 
 		return p;
 	}
 
-	private GUIPanel configureFieldsPanel()
+	private BasicGuiPanel configureFieldsPanel()
 	{
 		// customerTable = new JTable();
 		CustomerTableModel model = new CustomerTableModel(customersList, columnNames);
@@ -114,7 +113,7 @@ public class ShowAllCustomersPanel extends GUIPanel
 		// JScrollPane scrollPane = new JScrollPane(customerTable);
 		scrollPane.setPreferredSize(new Dimension(1000, 500));
 
-		GUIPanel p = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setOpaque(true);
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints c = new GridBagConstraints();
@@ -131,11 +130,11 @@ public class ShowAllCustomersPanel extends GUIPanel
 		return p;
 	}
 
-	private GUIPanel configureHeader()
+	private BasicGuiPanel configureHeader()
 	{
 		JLabel headerLbl = new JLabel("Customer Information");
 
-		GUIPanel headerPanel = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
 		GridBagConstraints hc = new GridBagConstraints();

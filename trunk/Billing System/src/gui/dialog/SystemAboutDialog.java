@@ -1,6 +1,6 @@
 package gui.dialog;
 
-import gui.GUIPanel;
+import gui.panels.BasicGuiPanel;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -24,7 +24,7 @@ public class SystemAboutDialog extends BillingSystemAbstractDialog
 		validate();
 	}
 
-	private GUIPanel getAboutPanel()
+	private BasicGuiPanel getAboutPanel()
 	{
 		String[] copyright = new String[]
 		{ "Copyright (c) by KTS, Sudhnoti, AJ&K", //$NON-NLS-1$
@@ -38,7 +38,7 @@ public class SystemAboutDialog extends BillingSystemAbstractDialog
 		// lines.add("");
 		// lines.addAll(Arrays.asList(environment));
 
-		GUIPanel panel = new GUIPanel(new GridLayout(lines.size() + 1, 1));
+		BasicGuiPanel panel = new BasicGuiPanel(new GridLayout(lines.size() + 1, 1));
 
 		JLabel l1 = new JLabel("KTS");
 		l1.setFont(l1.getFont().deriveFont(Font.BOLD));

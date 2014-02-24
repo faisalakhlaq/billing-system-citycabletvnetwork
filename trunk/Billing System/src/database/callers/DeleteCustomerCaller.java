@@ -1,28 +1,15 @@
 package database.callers;
 
+import javax.swing.JOptionPane;
+
 import gui.caller.CloseViewCaller;
 import gui.dialog.MessageDialog;
 import database.CustomerHandler;
 
 public class DeleteCustomerCaller
 {
-
 	public static void perform(int customerAccountNumber)
 	{
-		// if (panel == null)
-		// {
-		// new MessageDialog("Error",
-		// "Sorry the customer cannot be deleted. Panel = null!");
-		// return;
-		// }
-		// Customer c = panel.getCustomer();
-		// if (c == null)
-		// {
-		// new MessageDialog("Error",
-		// "Sorry the customer cannot be deleted. Customer = null!");
-		// return;
-		// }
-
 		CustomerHandler handler = new CustomerHandler();
 		boolean deleted;
 		try
@@ -31,7 +18,7 @@ public class DeleteCustomerCaller
 
 			if (deleted)
 			{
-				new MessageDialog("Deleted", "Customer is deleted!");
+				new MessageDialog("Deleted", "Customer is deleted!", JOptionPane.INFORMATION_MESSAGE);
 				CloseViewCaller.perform(); // close the view after customer
 											// deletion
 			}
