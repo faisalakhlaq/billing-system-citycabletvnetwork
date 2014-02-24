@@ -1,6 +1,5 @@
 package gui.panels;
 
-import gui.GUIPanel;
 import gui.caller.CloseViewCaller;
 
 import java.awt.ComponentOrientation;
@@ -21,7 +20,7 @@ import model.ModelObject;
 import org.jdesktop.swingx.JXDatePicker;
 
 @SuppressWarnings("serial")
-public class BillPaymentPanel extends GUIPanel
+public class BillPaymentPanel extends BasicGuiPanel
 {
 	private Customer customer = null;
 
@@ -62,9 +61,9 @@ public class BillPaymentPanel extends GUIPanel
 
 	private void initializePanel()
 	{
-		GUIPanel header = configureHeader();
-		GUIPanel fieldsPanel = configureFieldsPanel();
-		GUIPanel btnPanel = configureButtonPanel();
+		BasicGuiPanel header = configureHeaderPanel();
+		BasicGuiPanel fieldsPanel = configureFieldsPanel();
+		BasicGuiPanel btnPanel = configureButtonPanel();
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -99,7 +98,7 @@ public class BillPaymentPanel extends GUIPanel
 		initTextFields();
 	}
 
-	private GUIPanel configureFieldsPanel()
+	private BasicGuiPanel configureFieldsPanel()
 	{
 		JLabel customerNameLbl = new JLabel("Customer Name");
 		JLabel accountNummberLbl = new JLabel("Account Number");
@@ -125,11 +124,13 @@ public class BillPaymentPanel extends GUIPanel
 		datePicker = new JXDatePicker();
 		datePicker.setDate(Calendar.getInstance().getTime());
 		datePicker.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
-		// billingYearCombobox = new JComboBox<String>(null);
+		String[] years = getNextFiveYears();
+		billingYearCombobox = new JComboBox<String>();
+		billingYearCombobox.setModel(new javax.swing.DefaultComboBoxModel<String>(years));
 		customerJoinDatetxt = new JTextField(20);
 		connectionTypetxt = new JTextField(20);
 
-		GUIPanel p = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -250,14 +251,14 @@ public class BillPaymentPanel extends GUIPanel
 		c.gridwidth = 1;
 		p.add(billingYearLbl, c);
 
-		// c.fill = GridBagConstraints.HORIZONTAL;
-		// c.anchor = GridBagConstraints.LINE_END;
-		// c.weightx = 0.75;
-		// c.weighty = 0;
-		// c.gridx = 1;
-		// c.gridy = 7;
-		// c.gridwidth = 1;
-		// p.add(billingYeartxt, c);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 7;
+		c.gridwidth = 1;
+		p.add(billingYearCombobox, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LINE_START;
@@ -316,13 +317,28 @@ public class BillPaymentPanel extends GUIPanel
 		return p;
 	}
 
-	private GUIPanel configureButtonPanel()
+	/**
+	 * Returns the next five years starting from the current year
+	 * */
+	private String[] getNextFiveYears()
+	{
+		String[] years = new String[5];
+		Calendar cal = Calendar.getInstance();
+		int thisYear = cal.get(Calendar.YEAR);
+
+		for (int i = 0; i < years.length; i++)
+			years[i] = Integer.toString(thisYear + i);
+
+		return years;
+	}
+
+	private BasicGuiPanel configureButtonPanel()
 	{
 		payBillbtn = new JButton("Pay Bill");
 		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
 
-		GUIPanel p = new GUIPanel(new FlowLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
 		p.add(payBillbtn);
 		p.add(exitbtn);
@@ -330,11 +346,11 @@ public class BillPaymentPanel extends GUIPanel
 		return p;
 	}
 
-	private GUIPanel configureHeader()
+	private BasicGuiPanel configureHeaderPanel()
 	{
 		JLabel headerLbl = new JLabel("Bill Payment");
 
-		GUIPanel headerPanel = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
 		GridBagConstraints hc = new GridBagConstraints();

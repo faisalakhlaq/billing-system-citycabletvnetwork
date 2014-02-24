@@ -1,6 +1,5 @@
 package gui.panels;
 
-import gui.GUIPanel;
 import gui.caller.CloseViewCaller;
 
 import java.awt.ComponentOrientation;
@@ -26,7 +25,7 @@ import javax.swing.border.EtchedBorder;
 
 import model.CompanyInformation;
 
-public class PrintBillPanel extends GUIPanel implements Printable
+public class PrintBillPanel extends BasicGuiPanel implements Printable
 {
 	private static final long serialVersionUID = -7417720568612211026L;
 
@@ -73,9 +72,9 @@ public class PrintBillPanel extends GUIPanel implements Printable
 
 	private void configurePanel()
 	{
-		GUIPanel header = configureHeader();
-		GUIPanel fieldsPanel = configureDataFieldsPanel();
-		GUIPanel btnPanel = configureBtnPanel();
+		BasicGuiPanel header = configureHeader();
+		BasicGuiPanel fieldsPanel = configureDataFieldsPanel();
+		BasicGuiPanel btnPanel = configureBtnPanel();
 
 		// add(header);
 		// add(fieldsPanel);
@@ -111,9 +110,9 @@ public class PrintBillPanel extends GUIPanel implements Printable
 		add(btnPanel, c);
 	}
 
-	private GUIPanel configureBtnPanel()
+	private BasicGuiPanel configureBtnPanel()
 	{
-		GUIPanel p = new GUIPanel(new FlowLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
 		final JButton exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
@@ -163,7 +162,7 @@ public class PrintBillPanel extends GUIPanel implements Printable
 		return p;
 	}
 
-	private GUIPanel configureDataFieldsPanel()
+	private BasicGuiPanel configureDataFieldsPanel()
 	{
 		JLabel issueDateLbl = new JLabel("Date of Issue");
 		JLabel dueDateLbl = new JLabel("Due Date");
@@ -205,7 +204,7 @@ public class PrintBillPanel extends GUIPanel implements Printable
 		balancetxt = new JTextField(20);
 		signatureReceivedAuthoritytxt = new JTextField(20);
 
-		GUIPanel p = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		// panel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -555,7 +554,7 @@ public class PrintBillPanel extends GUIPanel implements Printable
 		return p;
 	}
 
-	private GUIPanel configureHeader()
+	private BasicGuiPanel configureHeader()
 	{
 		CompanyInformation compInfo = new CompanyInformation();
 
@@ -563,7 +562,7 @@ public class PrintBillPanel extends GUIPanel implements Printable
 		JLabel companyAddress = new JLabel(compInfo.getCompanyAddress() + compInfo.getCompanyTelephoneNumber());
 		JLabel companyOwner = new JLabel(compInfo.getCompanyOwnerName());
 
-		GUIPanel headerPanel = new GUIPanel(new GridBagLayout());
+		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
 		GridBagConstraints hc = new GridBagConstraints();

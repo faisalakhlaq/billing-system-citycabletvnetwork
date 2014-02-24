@@ -1,6 +1,7 @@
 package gui;
 
 import gui.buttons.TabCloseButton;
+import gui.panels.BasicGuiPanel;
 
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
@@ -29,9 +30,9 @@ public class BillingSystemDesktopPane extends JTabbedPane
 		return instance;
 	}
 
-	public void addPanel(String title, final GUIPanel panel)
+	public void addPanel(String title, final BasicGuiPanel panel)
 	{
-		GUIPanel titlePanel = new GUIPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		BasicGuiPanel titlePanel = new BasicGuiPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		titlePanel.setOpaque(false);
 		JLabel titleLbl = new JLabel(title);
 		titlePanel.add(titleLbl);

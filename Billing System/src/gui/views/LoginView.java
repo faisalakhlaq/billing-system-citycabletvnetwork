@@ -1,7 +1,7 @@
 package gui.views;
 
 import gui.GUIFrame;
-import gui.GUIPanel;
+import gui.panels.BasicGuiPanel;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -69,13 +69,13 @@ public class LoginView extends GUIFrame
 
 	private Component getLoginPanel()
 	{
-		GUIPanel panel = new GUIPanel();
+		BasicGuiPanel panel = new BasicGuiPanel();
 
-		GUIPanel headerPanel = new GUIPanel();
+		BasicGuiPanel headerPanel = new BasicGuiPanel();
 		headerPanel.add(new JLabel(new CompanyInformation().getCompanyName()));
 		panel.add(headerPanel);
 
-		GUIPanel fieldsPanel = new GUIPanel(new GridLayout(2, 2));
+		BasicGuiPanel fieldsPanel = new BasicGuiPanel(new GridLayout(2, 2));
 		fieldsPanel.add(new JLabel("Username"));
 		JTextField userNametxt = new JTextField(15);
 		userNametxt.requestFocusInWindow();
@@ -88,7 +88,7 @@ public class LoginView extends GUIFrame
 
 		panel.add(fieldsPanel);
 
-		GUIPanel buttonPanel = new GUIPanel(new FlowLayout());
+		BasicGuiPanel buttonPanel = new BasicGuiPanel(new FlowLayout());
 		JButton loginbtn = new JButton("Login", new ImageIcon(getClass().getResource("/resources/Key.gif")));
 		buttonPanel.add(loginbtn);
 		JButton exitbtn = new JButton("Exit", new ImageIcon(getClass().getResource("/resources/Keys.gif")));

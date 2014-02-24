@@ -1,6 +1,6 @@
 package gui.dialog;
 
-import gui.GUIPanel;
+import gui.panels.BasicGuiPanel;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -37,9 +37,16 @@ public class MessageDialog extends BillingSystemAbstractDialog
 		validate();
 	}
 
-	private GUIPanel getPanel(String title, String message)
+	public int showConfirmDialog(String title, String message)
 	{
-		GUIPanel panel = new GUIPanel(new GridLayout(3, 1));
+		int selection = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+		return selection;
+	}
+
+	private BasicGuiPanel getPanel(String title, String message)
+	{
+		BasicGuiPanel panel = new BasicGuiPanel(new GridLayout(3, 1));
 
 		JLabel l1 = new JLabel(title);
 		l1.setFont(l1.getFont().deriveFont(Font.BOLD));
