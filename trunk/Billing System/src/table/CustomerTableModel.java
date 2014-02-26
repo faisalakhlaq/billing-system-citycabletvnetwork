@@ -9,23 +9,23 @@ import model.Customer;
 @SuppressWarnings("serial")
 public class CustomerTableModel extends AbstractTableModel
 {
-	public static final int ACCOUNT_NUMBER = 0;
+	private static final int ACCOUNT_NUMBER = 0;
 
-	public static final int DATE = 1;
+	private static final int DATE = 1;
 
-	public static final int NAME = 2;
+	private static final int NAME = 2;
 
-	public static final int ADDRESS = 3;
+	private static final int ADDRESS = 3;
 
-	public static final int ADVANCE = 4;
+	private static final int ADVANCE = 4;
 
-	public static final int NIC_NUMBER = 5;
+	private static final int NIC_NUMBER = 5;
 
-	public static final int TELEPHONE = 6;
+	private static final int TELEPHONE = 6;
 
-	public static final int CONNECTION_TYPE = 7;
+	private static final int CONNECTION_TYPE = 7;
 
-	public static final int CONNECTION_FEE = 8;
+	private static final int CONNECTION_FEE = 8;
 
 	private String[] columnNames;
 

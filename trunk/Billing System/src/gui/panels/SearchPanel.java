@@ -1,6 +1,7 @@
 package gui.panels;
 
 import gui.caller.CloseViewCaller;
+import gui.dialog.MessageDialog;
 
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
@@ -13,10 +14,12 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import utils.Helper;
+import database.callers.CustomerBillCaller;
 import database.callers.SearchCuctomerCaller;
 
 @SuppressWarnings("serial")
-public class SearchCustomerPanel extends BasicGuiPanel
+public class SearchPanel extends BasicGuiPanel
 {
 	private JTextField accountNumbertxt;
 
@@ -28,7 +31,7 @@ public class SearchCustomerPanel extends BasicGuiPanel
 
 	private JButton getBillbtn;
 
-	public SearchCustomerPanel()
+	public SearchPanel()
 	{
 		intitializePanel();
 	}
@@ -81,9 +84,10 @@ public class SearchCustomerPanel extends BasicGuiPanel
 		resetbtn.addActionListener(new ResetFieldsListener());
 
 		searchbtn = new JButton("Search");
-		searchbtn.addActionListener(new SearchCuctomerCaller(SearchCustomerPanel.this));
+		searchbtn.addActionListener(new SearchCuctomerCaller(SearchPanel.this));
 
 		getBillbtn = new JButton("Get Bill");
+		getBillbtn.addActionListener(new SearchBillListener());
 
 		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
@@ -156,6 +160,31 @@ public class SearchCustomerPanel extends BasicGuiPanel
 		public void actionPerformed(ActionEvent arg0)
 		{
 			accountNumbertxt.setText(null);
+		}
+	}
+
+	private class SearchBillListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			if (accountNumbertxt == null)
+			{
+				new MessageDialog("Error", "Customer account number cannot be empty");
+				return;
+			}
+			String accountNumber = accountNumbertxt.getText();
+			if (Helper.isEmpty(accountNumber))
+			{
+				new MessageDialog("No number provided", "Customer account number cannot be empty");
+				return;
+			}
+			if (!Helper.isDigit(accountNumber.trim()))
+			{
+				new MessageDialog("Wrong number", "Customer account number can only contain digits");
+				return;
+			}
+			CustomerBillCaller.searchBill(Integer.valueOf(accountNumber));
 		}
 	}
 }

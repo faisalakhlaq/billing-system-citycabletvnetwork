@@ -22,7 +22,7 @@ public class ViewAllCustomersCaller implements ActionListener
 	{
 		javax.swing.SwingUtilities.invokeLater(new Runnable()
 		{
-
+			// TODO check if it is OK to run it like this
 			public void run()
 			{
 				try
