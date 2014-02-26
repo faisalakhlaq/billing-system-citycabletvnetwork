@@ -9,3 +9,20 @@ telephone int,
 connection_type VARCHAR(15),
 connection_fee int
 );
+
+
+CREATE TABLE BILL(
+bill_number int NOT NULL AUTO_INCREMENT,
+PRIMARY KEY(bill_number),
+issue_date DATE,
+due_date DATE,
+account_number INT,
+month VARCHAR(10),
+year INT,
+payable_amount INT,
+received_amount INT,
+received_by VARCHAR(20),
+paid BOOL
+);
+
+ALTER TABLE BILL AUTO_INCREMENT = 10000;

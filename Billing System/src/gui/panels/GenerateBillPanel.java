@@ -10,20 +10,28 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.jdesktop.swingx.JXDatePicker;
 
+import utils.Helper;
+import database.callers.GenerateBillCaller;
+
 @SuppressWarnings("serial")
 public class GenerateBillPanel extends AbstractGuiPanel
 {
-
 	private JTextField commercialBilltxt;
 
 	private JTextField privateBilltxt;
+
+	private JComboBox<String> billingMonthCbx;
+
+	private JComboBox<Integer> billingYearCbx;
 
 	private JXDatePicker billIssueDate;
 
@@ -64,9 +72,11 @@ public class GenerateBillPanel extends AbstractGuiPanel
 	public BasicGuiPanel getCenterPanel()
 	{
 		JLabel commercialBillLbl = new JLabel("Commercial Bill");
-		JLabel privateBillLbl = new JLabel("Private");
+		JLabel privateBillLbl = new JLabel("Private Bill");
 		JLabel billIssueDateLbl = new JLabel("Issue Date");
 		JLabel billDueDateLbl = new JLabel("Due Date");
+		JLabel billMonthLbl = new JLabel("Billing Month");
+		JLabel billYearLbl = new JLabel("Billing Year");
 
 		commercialBilltxt = new JTextField(10);
 		privateBilltxt = new JTextField(10);
@@ -76,6 +86,12 @@ public class GenerateBillPanel extends AbstractGuiPanel
 		billDueDate = new JXDatePicker();
 		billDueDate.setDate(Calendar.getInstance().getTime());
 		billDueDate.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
+		String[] months =
+		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
+		billingMonthCbx = new JComboBox<String>(months);
+		Integer[] years = Helper.getNextYears(5);
+		billingYearCbx = new JComboBox<Integer>();
+		billingYearCbx.setModel(new javax.swing.DefaultComboBoxModel<Integer>(years));
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -105,6 +121,18 @@ public class GenerateBillPanel extends AbstractGuiPanel
 		setGridBagConstraints(c, 1, 4, GridBagConstraints.LINE_END, 10, 10);
 		p.add(billDueDate, c);
 
+		setGridBagConstraints(c, 0, 5, GridBagConstraints.LINE_START, 10, 0);
+		p.add(billMonthLbl, c);
+
+		setGridBagConstraints(c, 1, 5, GridBagConstraints.LINE_END, 10, 10);
+		p.add(billingMonthCbx, c);
+
+		setGridBagConstraints(c, 0, 6, GridBagConstraints.LINE_START, 10, 0);
+		p.add(billYearLbl, c);
+
+		setGridBagConstraints(c, 1, 6, GridBagConstraints.LINE_END, 10, 10);
+		p.add(billingYearCbx, c);
+
 		return p;
 	}
 
@@ -127,7 +155,8 @@ public class GenerateBillPanel extends AbstractGuiPanel
 	@Override
 	public BasicGuiPanel getButtonPanel()
 	{
-		generateBillBtn = new JButton("Pay Bill");
+		generateBillBtn = new JButton("Generate Bill");
+		generateBillBtn.addActionListener(new GenerateBillCaller(this));
 		exitBtn = new JButton("Exit");
 		exitBtn.addActionListener(new CloseViewCaller());
 
@@ -152,6 +181,24 @@ public class GenerateBillPanel extends AbstractGuiPanel
 		return owningView;
 	}
 
+	// private class GenerateBill implements ActionListener
+	// {
+	// @Override
+	// public void actionPerformed(ActionEvent arg0)
+	// {
+	// try
+	// {
+	// CustomerHandler custHandler = new CustomerHandler();
+	// Map<Integer, String> list = custHandler.getCustomerConnectionTypes();
+	//
+	// }
+	// catch (Exception e)
+	// {
+	// new MessageDialog("Error", e.getMessage());
+	// }
+	// }
+	// }
+
 	private void setPanelGridBagConstraints(GridBagConstraints c, int gridx, int gridy, int paddingTop)
 	{
 		c.fill = GridBagConstraints.VERTICAL;
@@ -175,6 +222,35 @@ public class GenerateBillPanel extends AbstractGuiPanel
 		c.gridx = gridx;
 		c.gridy = gridy;
 		c.gridwidth = 1;
-		// return c;
+	}
+
+	public String getCommercialBill()
+	{
+		return commercialBilltxt.getText();
+	}
+
+	public String getPrivateBill()
+	{
+		return privateBilltxt.getText();
+	}
+
+	public String getBillingMonth()
+	{
+		return String.valueOf(billingMonthCbx.getSelectedItem());
+	}
+
+	public int getBillingYear()
+	{
+		return Integer.valueOf(String.valueOf(billingYearCbx.getSelectedItem()));
+	}
+
+	public Date getBillIssueDate()
+	{
+		return billIssueDate.getDate();
+	}
+
+	public Date getBillDueDate()
+	{
+		return billDueDate.getDate();
 	}
 }
