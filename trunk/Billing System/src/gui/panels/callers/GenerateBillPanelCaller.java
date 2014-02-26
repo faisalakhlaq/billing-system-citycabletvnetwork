@@ -13,7 +13,7 @@ public class GenerateBillPanelCaller implements ActionListener
 	public void actionPerformed(ActionEvent arg0)
 	{
 		BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-		desktop.addPanel("Search Customer", new GenerateBillPanel());
+		desktop.addPanel("Generate Bill", new GenerateBillPanel());
 	}
 
 }

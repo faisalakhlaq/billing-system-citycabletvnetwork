@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Calendar;
+
 public class Helper
 {
 	public static boolean isDigit(String data)
@@ -22,5 +24,20 @@ public class Helper
 			isEmpty = true;
 		}
 		return isEmpty;
+	}
+
+	/**
+	 * Returns the specified number of next years starting from the current year
+	 * */
+	public static Integer[] getNextYears(int numberOfYears)
+	{
+		Integer[] years = new Integer[numberOfYears];
+		Calendar cal = Calendar.getInstance();
+		int thisYear = cal.get(Calendar.YEAR);
+
+		for (int i = 0; i < numberOfYears; i++)
+			years[i] = thisYear + i;
+
+		return years;
 	}
 }

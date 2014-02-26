@@ -76,9 +76,6 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		BasicGuiPanel fieldsPanel = configureDataFieldsPanel();
 		BasicGuiPanel btnPanel = configureBtnPanel();
 
-		// add(header);
-		// add(fieldsPanel);
-		// add(btnPanel);
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -118,46 +115,12 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		exitbtn.addActionListener(new CloseViewCaller());
 		final JButton resetbtn = new JButton("Reset");
 		resetbtn.addActionListener(new ResetFieldsListener());
-		final JButton printBtn = new JButton("Print");
-		// printBtn.addActionListener(new PrintBillListener());
-		printBtn.addActionListener(new ActionListener()
-		{
+		JButton printBtn = new JButton("Print");
+		printBtn.addActionListener(new PrintActionListener());
 
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				printBtn.setVisible(false);
-				resetbtn.setVisible(false);
-				exitbtn.setVisible(false);
-
-				PrinterJob printJob = PrinterJob.getPrinterJob();
-
-				// Get and change default page format settings if necessary.
-				setFieldsEditable(false);
-				printJob.setPrintable(PrintBillPanel.this);
-				if (printJob.printDialog())
-				{
-					try
-					{
-						printJob.print();
-					}
-					catch (Exception PrintException)
-					{
-						PrintException.printStackTrace();
-					}
-					printJob.cancel();
-				}
-				printJob.cancel();
-				setFieldsEditable(true);
-				printBtn.setVisible(true);
-				resetbtn.setVisible(true);
-				exitbtn.setVisible(true);
-			}
-		});
-
-		p.add(exitbtn);
-		p.add(resetbtn);
 		p.add(printBtn);
+		p.add(resetbtn);
+		p.add(exitbtn);
 
 		return p;
 	}
@@ -598,15 +561,18 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 	}
 
 	@Override
-	public int print(Graphics g, PageFormat pf, int pi) throws PrinterException
+	public int print(Graphics g, PageFormat pf, int pageIndex) throws PrinterException
 	{
+		if (pageIndex > 0)
+		{
+			return Printable.NO_SUCH_PAGE;
+		}
 		Graphics2D g2 = (Graphics2D) g;
-		g2.translate(pf.getImageableX() + 5, pf.getImageableY() + 5);
+		g2.translate(pf.getImageableX(), pf.getImageableY());
 
 		Font f = new Font("Monospaced", Font.PLAIN, 12);
 		g2.setFont(f);
-		paint(g2);
-
+		this.paint(g2);
 		return Printable.PAGE_EXISTS;
 	}
 
@@ -658,6 +624,28 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 			balancetxt.setText(null);
 			signatureReceivedAuthoritytxt.setText(null);
 		}
+	}
 
+	private class PrintActionListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			PrinterJob printJob = PrinterJob.getPrinterJob();
+			setFieldsEditable(false);
+			printJob.setPrintable(PrintBillPanel.this);
+			if (printJob.printDialog())
+			{
+				try
+				{
+					printJob.print();
+				}
+				catch (Exception PrintException)
+				{
+					PrintException.printStackTrace();
+				}
+			}
+			setFieldsEditable(true);
+		}
 	}
 }

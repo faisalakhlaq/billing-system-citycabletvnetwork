@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -15,6 +17,7 @@ public class CustomerHandler
 {
 	DBConnection db = null;
 
+	// TODO should execute the queries in a separate thread
 	public CustomerHandler()
 	{
 	}
@@ -74,7 +77,7 @@ public class CustomerHandler
 	 * 
 	 * @param Account
 	 *            number of the customer to be searched in the database
-	 * @return A Customer or NULL if no record found
+	 * @return Customer record or NULL if no record found
 	 * @throws Exception
 	 */
 	public Customer searchCustomer(int customerAccountNumber) throws Exception
@@ -142,7 +145,7 @@ public class CustomerHandler
 	/**
 	 * Queries the database
 	 * 
-	 * @return An ArrayList of Customers or NULL if no record found
+	 * @return Vector of Customers or NULL if no record found
 	 * @throws Exception
 	 */
 	public Vector<Customer> getAllCustomers() throws Exception
@@ -213,6 +216,63 @@ public class CustomerHandler
 			}
 		}
 		return customerList;
+	}
+
+	public Map<Integer, String> getCustomerConnectionTypes() throws Exception
+	{
+		Map<Integer, String> conTypes = null;
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		Statement stmt = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database!");
+		}
+		try
+		{
+			stmt = conn.createStatement();
+			String query = "Select account_number, connection_type from Customer;";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs != null)
+			{
+				conTypes = new HashMap<Integer, String>();
+				while (rs.next())
+				{
+					conTypes.put(rs.getInt("account_number"), rs.getString("connection_type"));
+				}
+			}
+		}
+		catch (Exception e1)
+		{
+			Logger.getGlobal().severe("Unable to retrieve customer account numbers from the database: " + e1.getMessage());
+			System.out.println("SQLException: " + e1.getMessage());
+			e1.printStackTrace();
+			throw new Exception("Unable to retrieve customer account numbers from the database!");
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while closing the connection : " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new SQLException("Error occured while closing the connection or statement.");
+			}
+		}
+		return conTypes;
 	}
 
 	/**

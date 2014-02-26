@@ -19,6 +19,8 @@ import model.ModelObject;
 
 import org.jdesktop.swingx.JXDatePicker;
 
+import utils.Helper;
+
 @SuppressWarnings("serial")
 public class BillPaymentPanel extends BasicGuiPanel
 {
@@ -42,7 +44,7 @@ public class BillPaymentPanel extends BasicGuiPanel
 
 	private JXDatePicker datePicker;
 
-	private JComboBox<String> billingYearCombobox; // change data type
+	private JComboBox<Integer> billingYearCombobox; // change data type
 
 	private JTextField customerJoinDatetxt;
 
@@ -116,7 +118,7 @@ public class BillPaymentPanel extends BasicGuiPanel
 		customerNametxt = new JTextField(20);
 		accountNumbertxt = new JTextField(20);
 		String[] months =
-		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTUBER", "NOVEMBER", "DECEMBER" };
+		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
 		billingMonthCombobox = new JComboBox<String>(months);
 		amounttxt = new JTextField(20);
 		surchargetxt = new JTextField(20);
@@ -124,9 +126,8 @@ public class BillPaymentPanel extends BasicGuiPanel
 		datePicker = new JXDatePicker();
 		datePicker.setDate(Calendar.getInstance().getTime());
 		datePicker.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
-		String[] years = getNextFiveYears();
-		billingYearCombobox = new JComboBox<String>();
-		billingYearCombobox.setModel(new javax.swing.DefaultComboBoxModel<String>(years));
+		billingYearCombobox = new JComboBox<Integer>();
+		billingYearCombobox.setModel(new javax.swing.DefaultComboBoxModel<Integer>(Helper.getNextYears(5)));
 		customerJoinDatetxt = new JTextField(20);
 		connectionTypetxt = new JTextField(20);
 
@@ -315,21 +316,6 @@ public class BillPaymentPanel extends BasicGuiPanel
 		p.add(advertisementBilltxt, c);
 
 		return p;
-	}
-
-	/**
-	 * Returns the next five years starting from the current year
-	 * */
-	private String[] getNextFiveYears()
-	{
-		String[] years = new String[5];
-		Calendar cal = Calendar.getInstance();
-		int thisYear = cal.get(Calendar.YEAR);
-
-		for (int i = 0; i < years.length; i++)
-			years[i] = Integer.toString(thisYear + i);
-
-		return years;
 	}
 
 	private BasicGuiPanel configureButtonPanel()
