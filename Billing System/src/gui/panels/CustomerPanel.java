@@ -21,6 +21,7 @@ import model.Customer;
 import model.ModelObject;
 import utils.CustomPair;
 import utils.Helper;
+import database.callers.CustomerBillCaller;
 import database.callers.DeleteCustomerCaller;
 
 public class CustomerPanel extends BasicGuiPanel
@@ -182,6 +183,7 @@ public class CustomerPanel extends BasicGuiPanel
 	private BasicGuiPanel configureBtnPanel()
 	{
 		billHistorybtn = new JButton("Bill History");
+		billHistorybtn.addActionListener(new BillHistoryButtonListener());
 
 		payBillbtn = new JButton("Pay Bill");
 		payBillbtn.addActionListener(new BillPaymentPanelCaller(CustomerPanel.this));
@@ -623,6 +625,15 @@ public class CustomerPanel extends BasicGuiPanel
 					DeleteCustomerCaller.perform(customer.getAccountNumber());
 				}
 			}
+		}
+	}
+
+	private class BillHistoryButtonListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			CustomerBillCaller.getCustomerBills(customer.getAccountNumber());
 		}
 	}
 }

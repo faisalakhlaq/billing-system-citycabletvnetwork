@@ -12,6 +12,9 @@ public class Helper
 		return isDigit;
 	}
 
+	/**
+	 * Check if the provided string is empty or null
+	 */
 	public static boolean isEmpty(String str)
 	{
 		boolean isEmpty = false;
@@ -39,5 +42,12 @@ public class Helper
 			years[i] = thisYear + i;
 
 		return years;
+	}
+
+	public static String[] getMonths()
+	{
+		String[] months =
+		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
+		return months;
 	}
 }

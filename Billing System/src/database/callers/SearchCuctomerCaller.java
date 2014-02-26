@@ -4,7 +4,7 @@ import gui.BillingSystemDesktopPane;
 import gui.caller.CloseViewCaller;
 import gui.dialog.MessageDialog;
 import gui.panels.CustomerPanel;
-import gui.panels.SearchCustomerPanel;
+import gui.panels.SearchPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,9 +17,9 @@ import database.CustomerHandler;
 
 public class SearchCuctomerCaller implements ActionListener
 {
-	SearchCustomerPanel panel;
+	SearchPanel panel;
 
-	public SearchCuctomerCaller(SearchCustomerPanel p)
+	public SearchCuctomerCaller(SearchPanel p)
 	{
 		panel = p;
 	}
