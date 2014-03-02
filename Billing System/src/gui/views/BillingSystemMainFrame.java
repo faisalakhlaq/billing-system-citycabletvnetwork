@@ -7,6 +7,7 @@ import gui.GUIFrame;
 import gui.menubar.MainFrameMenuBar;
 import gui.panels.BasicGuiPanel;
 import gui.panels.CompanyInfoBannerPanel;
+import gui.panels.MainViewLeftPanel;
 import gui.toolbar.BillingSystemToolBar;
 
 import java.awt.BorderLayout;
@@ -17,6 +18,7 @@ import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.border.EtchedBorder;
 
 import model.CompanyInformation;
@@ -82,9 +84,29 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 		BillingSystemDesktopPane desktopPane = BillingSystemDesktopPane.getInstance();
 		CompanyInfoBannerPanel bannerPanel = new CompanyInfoBannerPanel();
 		Container pane = getContentPane();
+
+		MainViewLeftPanel leftPanel = new MainViewLeftPanel();
+
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, new JScrollPane(desktopPane));
+		splitPane.setResizeWeight(0.04);
+		 splitPane.setOneTouchExpandable(true);
+		// splitPane.setUI(new BasicSplitPaneUI()
+		// {
+		// public BasicSplitPaneDivider createDefaultDivider()
+		// {
+		// return new BasicSplitPaneDivider(this)
+		// {
+		// public void setBorder(Border b)
+		// {
+		// }
+		// };
+		// }
+		// });
+
 		BasicGuiPanel p = new BasicGuiPanel(new BorderLayout());
 		p.add(BorderLayout.NORTH, bannerPanel);
-		p.add(BorderLayout.CENTER, new JScrollPane(desktopPane));
+		p.add(BorderLayout.CENTER, splitPane);
+
 		pane.add(BorderLayout.CENTER, p);
 	}
 

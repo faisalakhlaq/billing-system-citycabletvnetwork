@@ -5,7 +5,9 @@ import gui.GUIMenuBar;
 import gui.caller.AboutMenuItemCaller;
 import gui.caller.ExitSystemCaller;
 import gui.caller.ShowStatusbarCaller;
+import gui.panels.callers.AddAreaCodePanelCaller;
 import gui.panels.callers.AddCustomerPanelCaller;
+import gui.panels.callers.DisplayAllAreaCodesPanelCaler;
 import gui.panels.callers.SearchCustomerPanelCaller;
 
 import java.awt.event.ActionEvent;
@@ -43,12 +45,14 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		JMenu view = addMenu("View");
 		JMenu customer = addMenu("Customer");
 		JMenu billing = addMenu("Billing");
+		JMenu areaCode = addMenu("Area Code");
 
 		configureHelpMenu(help);
 		configureExitMenu(menu);
 		configureViewMenu(view);
 		configureCustomerMenu(customer);
 		configureBillingMenu(billing);
+		configureAreaCodeMenu(areaCode);
 	}
 
 	/**
@@ -121,8 +125,8 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		billMenu.setMnemonic(KeyEvent.VK_B); // Mnemonic to access the menu
 		JMenuItem printAllBillsMenuItem = addMenuItem(billMenu, "Print All Bills");
 		// exitMenuItem.addActionListener(new ExitSystemCaller());
-		ImageIcon exitIcon = new ImageIcon(getClass().getResource("/resources/print.png"));
-		printAllBillsMenuItem.setIcon(exitIcon);
+		ImageIcon printIcon = new ImageIcon(getClass().getResource("/resources/print.png"));
+		printAllBillsMenuItem.setIcon(printIcon);
 		printAllBillsMenuItem.setToolTipText("Print out all Bills");
 
 		JMenuItem searchCustomerBillMenuItem = addMenuItem(billMenu, "Customer Bill");
@@ -130,6 +134,16 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		ImageIcon searchIcon = new ImageIcon(getClass().getResource("/resources/search.png"));
 		searchCustomerBillMenuItem.setIcon(searchIcon);
 		searchCustomerBillMenuItem.setToolTipText("Search a Customer's bill");
+	}
+
+	private void configureAreaCodeMenu(JMenu areaCodeMenu)
+	{
+		JMenuItem displayAllCodesMenuItem = addMenuItem(areaCodeMenu, "Display All Area Codes");
+		displayAllCodesMenuItem.addActionListener(new DisplayAllAreaCodesPanelCaler());
+		displayAllCodesMenuItem.setToolTipText("Displays all area codes");
+
+		JMenuItem addAreaCode = addMenuItem(areaCodeMenu, "Add New Area Code");
+		addAreaCode.addActionListener(new AddAreaCodePanelCaller());
 	}
 
 	@Override

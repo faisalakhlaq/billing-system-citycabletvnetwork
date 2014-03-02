@@ -1,6 +1,7 @@
 package gui.panels;
 
 import gui.caller.CloseViewCaller;
+import gui.panels.callers.PrintBillPanelCaller;
 
 import java.awt.ComponentOrientation;
 import java.awt.Container;
@@ -19,11 +20,13 @@ import model.Bill;
 import org.jdesktop.swingx.JXDatePicker;
 
 import utils.Helper;
+import database.callers.DeleteBillCaller;
+import database.callers.PayBillCaller;
 
 /**
  * Displays an individual bill record.
  * <p>
- * Allows to edit, delete and pay bill
+ * Allows to print, edit, delete and pay bill
  * */
 @SuppressWarnings("serial")
 public class BillPanel extends AbstractGuiPanel
@@ -57,6 +60,8 @@ public class BillPanel extends AbstractGuiPanel
 	private JButton editBtn;
 
 	private JButton deleteBtn;
+
+	private JButton printBtn;
 
 	public BillPanel(Bill b)
 	{
@@ -220,6 +225,8 @@ public class BillPanel extends AbstractGuiPanel
 	public BasicGuiPanel getButtonPanel()
 	{
 		payBtn = new JButton("Pay Bill");
+		payBtn.addActionListener(new PayBillCaller(BillPanel.this));
+
 		editBtn = new JButton("Edit");
 		// editBtn.addActionListener(new EditCustomer());
 
@@ -227,7 +234,10 @@ public class BillPanel extends AbstractGuiPanel
 		// cancelbtn.addActionListener(new CancelEdit());
 
 		deleteBtn = new JButton("Delete");
-		// deleteBtn.addActionListener(new DeleteCustomer());
+		deleteBtn.addActionListener(new DeleteBillCaller(BillPanel.this));
+
+		printBtn = new JButton("Print");
+		printBtn.addActionListener(new PrintBillPanelCaller(BillPanel.this));
 
 		exitBtn = new JButton("Exit");
 		exitBtn.addActionListener(new CloseViewCaller());
@@ -237,6 +247,7 @@ public class BillPanel extends AbstractGuiPanel
 		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
 		p.add(payBtn);
+		p.add(printBtn);
 		p.add(editBtn);
 		p.add(deleteBtn);
 		// p.add(cancelbtn);
@@ -295,9 +306,62 @@ public class BillPanel extends AbstractGuiPanel
 		accountNumberTxt.setEditable(edit);
 		billingMonthCbx.setEnabled(edit);
 		billingYearCbx.setEnabled(edit);
-		payableAmountTxt.setEditable(edit);
-		receivedAmountTxt.setEditable(edit);
-		receivedByTxt.setEditable(edit);
-		paidCbx.setEnabled(edit);
+		// payableAmountTxt.setEditable(edit);
+		// receivedAmountTxt.setEditable(edit);
+		// receivedByTxt.setEditable(edit);
+		// paidCbx.setEnabled(edit);
+	}
+
+	public Bill getBill() throws Exception
+	{
+		java.util.Date issue = issueDate.getDate();
+		java.util.Date due = dueDate.getDate();
+		if (issue.after(due))
+		{
+			throw new Exception("Please correct the dates. Issue Date is set after due date!");
+		}
+		String payable = payableAmountTxt.getText();
+		if (Helper.isEmpty(payable) || !Helper.isDigit(payable))
+		{
+			throw new Exception("Amount payable cannot be empty and can contain only numbers - digits");
+		}
+		String received = receivedAmountTxt.getText();
+		int receivedAmount = 0;
+		String receiver = receivedByTxt.getText();
+		if ("null".equalsIgnoreCase(receiver))
+		{
+			receiver = "";
+		}
+		if (!Helper.isEmpty(received))
+		{
+			if (!Helper.isDigit(received.trim()))
+			{
+				throw new Exception("Received amount can only contain numbers - digits");
+			}
+			receivedAmount = Integer.valueOf(received.trim());
+			if (receivedAmount > 0 && Helper.isEmpty(receiver))
+			{
+				throw new Exception("Receiver name cannot be empty");
+			}
+		}
+		String paid = String.valueOf(paidCbx.getSelectedItem());
+
+		bill.setBillNumber(Integer.valueOf(billNumberTxt.getText()));
+		bill.setIssueDate(issue);
+		bill.setDueDate(due);
+		bill.setAccountNumber(Integer.valueOf(accountNumberTxt.getText()));
+		bill.setMonth(String.valueOf(billingMonthCbx.getSelectedItem()));
+		bill.setYear(Integer.valueOf(String.valueOf(billingYearCbx.getSelectedItem())));
+		bill.setReceivedAmount(receivedAmount);
+		bill.setReceivedBy(receiver);
+		if (("True").equalsIgnoreCase(paid))
+		{
+			bill.setPaid(true);
+		}
+		else
+		{
+			bill.setPaid(false);
+		}
+		return bill;
 	}
 }

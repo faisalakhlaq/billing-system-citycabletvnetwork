@@ -2,7 +2,7 @@ package gui.panels;
 
 import gui.caller.CloseViewCaller;
 import gui.dialog.MessageDialog;
-import gui.panels.callers.BillPaymentPanelCaller;
+import gui.panels.callers.GenerateBillPanelCaller;
 
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
@@ -12,17 +12,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import model.CompanyInformation;
 import model.Customer;
 import model.ModelObject;
 import utils.CustomPair;
 import utils.Helper;
+import database.AreaCodeHandler;
 import database.callers.CustomerBillCaller;
 import database.callers.DeleteCustomerCaller;
+import database.callers.UpdateCustomerCaller;
 
 public class CustomerPanel extends BasicGuiPanel
 {
@@ -32,35 +37,37 @@ public class CustomerPanel extends BasicGuiPanel
 
 	private Customer customer = null;
 
-	JButton payBillbtn;
+	private JButton generateBillbtn;
 
-	JButton billHistorybtn;
+	private JButton billHistorybtn;
 
-	JButton editCustomerbtn;
+	private JButton editCustomerbtn;
 
-	JButton deleteCustomerbtn;
+	private JButton deleteCustomerbtn;
 
-	JButton exitbtn;
+	private JButton exitbtn;
 
-	JButton cancelbtn;
+	private JButton cancelbtn;
 
-	JTextField customerNametxt;
+	private JTextField customerNametxt;
 
-	JTextField nicNumbertxt;
+	private JTextField nicNumbertxt;
 
-	JTextField addresstxt;
+	private JTextField addresstxt;
 
-	JTextField customerJoinDatetxt;
+	private JTextField customerJoinDatetxt;
 
-	JTextField accountNumbertxt;
+	private JTextField accountNumbertxt;
 
-	JTextField advancetxt;
+	private JTextField advancetxt;
 
-	JTextField telephonetxt;
+	private JTextField telephonetxt;
 
-	JTextField connectionTypetxt;
+	private JComboBox<String> connectionTypeCbx;
 
-	JTextField connectionFeetxt;
+	private JTextField connectionFeetxt;
+
+	private JComboBox<Integer> areaCodeCbx;
 
 	public CustomerPanel()
 	{
@@ -132,25 +139,30 @@ public class CustomerPanel extends BasicGuiPanel
 		accountNumbertxt.setText(String.valueOf(customer.getAccountNumber()));
 		advancetxt.setText(String.valueOf(customer.getAdvance()));
 		telephonetxt.setText(String.valueOf(customer.getTelNumber()));
-		connectionTypetxt.setText(String.valueOf(customer.getConnectionType()));
+		// connectionTypetxt.setText(String.valueOf(customer.getConnectionType()));
+		connectionTypeCbx.setSelectedItem(customer.getConnectionType());
 		connectionFeetxt.setText(String.valueOf(customer.getConnectionFee()));
+		areaCodeCbx.setSelectedItem(customer.getAreaCode());
 	}
 
 	/**
 	 * If the panel is in edit mode set the text fields as active otherwise make
 	 * the fields inactive
+	 * <p>
+	 * Account number field will be in editable as we do not allow to change it
 	 * */
 	private void disableTextFields()
 	{
-		customerNametxt.setEnabled(editMode);
-		nicNumbertxt.setEnabled(editMode);
-		addresstxt.setEnabled(editMode);
-		customerJoinDatetxt.setEnabled(editMode);
-		accountNumbertxt.setEnabled(editMode);
-		advancetxt.setEnabled(editMode);
-		telephonetxt.setEnabled(editMode);
-		connectionTypetxt.setEnabled(editMode);
-		connectionFeetxt.setEnabled(editMode);
+		customerNametxt.setEditable(editMode);
+		nicNumbertxt.setEditable(editMode);
+		addresstxt.setEditable(editMode);
+		customerJoinDatetxt.setEditable(editMode);
+		accountNumbertxt.setEditable(false); // Account number cannot be changed
+		advancetxt.setEditable(editMode);
+		telephonetxt.setEditable(editMode);
+		// connectionTypetxt.setEditable(editMode);
+		connectionTypeCbx.setEditable(editMode);
+		connectionFeetxt.setEditable(editMode);
 	}
 
 	public boolean isInEditMode()
@@ -185,17 +197,17 @@ public class CustomerPanel extends BasicGuiPanel
 		billHistorybtn = new JButton("Bill History");
 		billHistorybtn.addActionListener(new BillHistoryButtonListener());
 
-		payBillbtn = new JButton("Pay Bill");
-		payBillbtn.addActionListener(new BillPaymentPanelCaller(CustomerPanel.this));
+		generateBillbtn = new JButton("Generate Bill");
+		generateBillbtn.addActionListener(new GenerateBillPanelCaller(true, CustomerPanel.this));
 
 		editCustomerbtn = new JButton("Edit");
-		editCustomerbtn.addActionListener(new EditCustomer());
+		editCustomerbtn.addActionListener(new EditCustomerListener());
 
 		cancelbtn = new JButton("Cancel");
 		cancelbtn.addActionListener(new CancelEdit());
 
 		deleteCustomerbtn = new JButton("Delete");
-		deleteCustomerbtn.addActionListener(new DeleteCustomer());
+		deleteCustomerbtn.addActionListener(new DeleteCustomerListener());
 
 		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseCustomerPanel());
@@ -204,7 +216,7 @@ public class CustomerPanel extends BasicGuiPanel
 
 		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
-		p.add(payBillbtn);
+		p.add(generateBillbtn);
 		p.add(billHistorybtn);
 		p.add(editCustomerbtn);
 		p.add(cancelbtn);
@@ -225,6 +237,7 @@ public class CustomerPanel extends BasicGuiPanel
 		JLabel telephoneLbl = new JLabel("Telephone");
 		JLabel connectionTypeLbl = new JLabel("Connection Type");
 		JLabel connectionFeeLbl = new JLabel("Connection Fee");
+		JLabel areaCodeLbl = new JLabel("Area Code");
 
 		customerNametxt = new JTextField(20);
 		nicNumbertxt = new JTextField(20);
@@ -233,8 +246,11 @@ public class CustomerPanel extends BasicGuiPanel
 		accountNumbertxt = new JTextField(20);
 		advancetxt = new JTextField(20);
 		telephonetxt = new JTextField(20);
-		connectionTypetxt = new JTextField(20);
+		// connectionTypetxt = new JTextField(20);
+		connectionTypeCbx = new JComboBox<String>(new CompanyInformation().getConnectionTypes());
 		connectionFeetxt = new JTextField(20);
+		areaCodeCbx = new JComboBox<Integer>();
+		areaCodeCbx.setModel(getAreaCodes());
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -382,7 +398,7 @@ public class CustomerPanel extends BasicGuiPanel
 		c.gridx = 1;
 		c.gridy = 8;
 		c.gridwidth = 1;
-		p.add(connectionTypetxt, c);
+		p.add(connectionTypeCbx, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LINE_START;
@@ -402,7 +418,44 @@ public class CustomerPanel extends BasicGuiPanel
 		c.gridwidth = 1;
 		p.add(connectionFeetxt, c);
 
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.25;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 10;
+		c.gridwidth = 1;
+		p.add(areaCodeLbl, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 10;
+		c.gridwidth = 1;
+		p.add(areaCodeCbx, c);
+
 		return p;
+	}
+
+	private ComboBoxModel<Integer> getAreaCodes()
+	{
+		AreaCodeHandler handler = new AreaCodeHandler();
+		ComboBoxModel<Integer> model = null;
+		try
+		{
+			model = new javax.swing.DefaultComboBoxModel<Integer>(handler.getCodes());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		if (model == null)
+		{
+			model = new javax.swing.DefaultComboBoxModel<Integer>();
+		}
+		return model;
 	}
 
 	/**
@@ -448,7 +501,7 @@ public class CustomerPanel extends BasicGuiPanel
 		c.setNicNumber(nicNumbertxt.getText());
 		c.setCustomerAddress(addresstxt.getText());
 		c.setDate(Date.valueOf(customerJoinDatetxt.getText()));
-		c.setConnectionType(connectionTypetxt.getText());
+		c.setConnectionType(String.valueOf(connectionTypeCbx.getSelectedItem()));
 
 		String acNumber = accountNumbertxt.getText();
 		if (!Helper.isEmpty(acNumber) && Helper.isDigit(acNumber))
@@ -470,6 +523,7 @@ public class CustomerPanel extends BasicGuiPanel
 		{
 			c.setConnectionFee(Integer.valueOf(fee));
 		}
+		c.setAreaCode(Integer.valueOf(String.valueOf(areaCodeCbx.getSelectedItem())));
 		return c;
 	}
 
@@ -488,7 +542,7 @@ public class CustomerPanel extends BasicGuiPanel
 	private CustomPair isValidInput()
 	{
 		CustomPair p = new CustomPair();
-
+		p.setBooleanKey(true);
 		String accountNumber = accountNumbertxt.getText();
 		if (Helper.isEmpty(accountNumber))
 		{
@@ -497,7 +551,7 @@ public class CustomerPanel extends BasicGuiPanel
 			p.setValue("Account number cannot be empty");
 			return p;
 		}
-		if (!Helper.isDigit(accountNumber))
+		if (!Helper.isDigit(accountNumber.trim()))
 		{
 			accountNumbertxt.setText(String.valueOf(customer.getAccountNumber()));
 			p.setBooleanKey(false);
@@ -555,7 +609,7 @@ public class CustomerPanel extends BasicGuiPanel
 		}
 	}
 
-	private class EditCustomer implements ActionListener
+	private class EditCustomerListener implements ActionListener
 	{
 
 		@Override
@@ -572,12 +626,13 @@ public class CustomerPanel extends BasicGuiPanel
 					CustomPair p = isValidInput();
 					if (p.isBooleanKey())
 					{
-						// TODO Update the customer in the database if(changed)
-						// then display success message and set customer = c;
+						UpdateCustomerCaller.perform(c);
+						customer = c;
+						new MessageDialog("Update Successful", "Customer was updated successfully", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else
 					{
-						new MessageDialog("Invalid Values", p.getValue(), JOptionPane.ERROR_MESSAGE);
+						new MessageDialog("Invalid Values", p.getValue());
 					}
 				}
 				else
@@ -607,7 +662,7 @@ public class CustomerPanel extends BasicGuiPanel
 		}
 	}
 
-	private class DeleteCustomer implements ActionListener
+	private class DeleteCustomerListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent arg0)

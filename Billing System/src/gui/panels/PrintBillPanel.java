@@ -23,7 +23,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
+import model.Bill;
 import model.CompanyInformation;
+import model.Customer;
 
 public class PrintBillPanel extends BasicGuiPanel implements Printable
 {
@@ -65,8 +67,15 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 
 	private JTextField signatureReceivedAuthoritytxt;
 
-	public PrintBillPanel()
+	private Customer customer = null;
+
+	private Bill bill = null;
+
+	/** Provide the customer and bill list to get the printed bills */
+	public PrintBillPanel(Customer customer, Bill bill)
 	{
+		this.customer = customer;
+		this.bill = bill;
 		configurePanel();
 	}
 
@@ -514,6 +523,7 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		c.gridwidth = 1;
 		p.add(signatureReceivedAuthoritytxt, c);
 
+		setFields();
 		return p;
 	}
 
@@ -567,9 +577,13 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		{
 			return Printable.NO_SUCH_PAGE;
 		}
+		double scaleX = pf.getImageableWidth() / this.getWidth();
+		double scaleY = pf.getImageableHeight() / this.getHeight();
+		// Maintain aspect ratio
+		double scale = Math.min(scaleX, scaleY);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.translate(pf.getImageableX(), pf.getImageableY());
-
+		g2.scale(scale, scale);
 		Font f = new Font("Monospaced", Font.PLAIN, 12);
 		g2.setFont(f);
 		this.paint(g2);
@@ -596,6 +610,33 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		receivedAmounttxt.setEditable(edit);
 		balancetxt.setEditable(edit);
 		signatureReceivedAuthoritytxt.setEditable(edit);
+	}
+
+	/**
+	 * Insert the bill customer data in the text fields
+	 * */
+	private void setFields()
+	{
+		if (bill == null || customer == null) return;
+
+		issueDatetxt.setText(bill.getIssueDate().toString());
+		dueDatetxt.setText(bill.getDueDate().toString());
+		billNotxt.setText(String.valueOf(bill.getBillNumber()));
+		acNotxt.setText(String.valueOf(bill.getAccountNumber()));
+		areaCodetxt.setText(String.valueOf(customer.getAreaCode()));
+		custNametxt.setText(customer.getCustomerName());
+		telNumbertxt.setText(String.valueOf(customer.getTelNumber()));
+		addresstxt.setText(customer.getCustomerAddress());
+		billingMonthtxt.setText(bill.getMonth());
+		currentPayableAmounttxt.setText(String.valueOf(bill.getPayableAmount()));
+		previousAmounttxt.setText("");
+		payableAmountByDueDatetxt.setText(String.valueOf(bill.getPayableAmount()));
+		payableAfterDueDatetxt.setText("");
+		surchargetxt.setText("");
+		advertisementChargestxt.setText("");
+		receivedAmounttxt.setText(String.valueOf(bill.getReceivedAmount()));
+		balancetxt.setText(String.valueOf(""));
+		signatureReceivedAuthoritytxt.setText(String.valueOf(bill.getReceivedBy()));
 	}
 
 	private class ResetFieldsListener implements ActionListener

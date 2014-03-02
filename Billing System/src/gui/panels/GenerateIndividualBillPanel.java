@@ -3,7 +3,6 @@ package gui.panels;
 import gui.caller.CloseViewCaller;
 
 import java.awt.ComponentOrientation;
-import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -17,14 +16,18 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import model.Customer;
+
 import org.jdesktop.swingx.JXDatePicker;
 
 import utils.Helper;
 import database.callers.GenerateBillCaller;
 
 @SuppressWarnings("serial")
-public class GenerateBillPanel extends AbstractGuiPanel
+public class GenerateIndividualBillPanel extends AbstractGuiPanel
 {
+	private JTextField accountNumbertxt;
+
 	private JTextField commercialBilltxt;
 
 	private JTextField privateBilltxt;
@@ -41,39 +44,27 @@ public class GenerateBillPanel extends AbstractGuiPanel
 
 	private JButton exitBtn;
 
-	/**
-	 * The panel generated bill for all the customers.
-	 */
-	public GenerateBillPanel()
+	private Customer customer;
+
+	private boolean isCommercial;
+
+	public GenerateIndividualBillPanel(Customer c)
 	{
-		initPanel();
+		this.customer = c;
+		addPanels();
 	}
 
 	@Override
 	public void initPanel()
 	{
-		BasicGuiPanel header = getHeaderPanel();
-		BasicGuiPanel fieldsPanel = getCenterPanel();
-		BasicGuiPanel btnPanel = getButtonPanel();
+		// TODO Auto-generated method stub
 
-		setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-
-		setPanelGridBagConstraints(c, 0, 1, 10);
-		c.ipady = 20; // make this component tall
-		add(header, c);
-
-		c.ipady = 0;
-		setPanelGridBagConstraints(c, 0, 2, 30);
-		add(fieldsPanel, c);
-
-		setPanelGridBagConstraints(c, 0, 3, 30);
-		add(btnPanel, c);
 	}
 
 	@Override
 	public BasicGuiPanel getCenterPanel()
 	{
+		JLabel accountNumberLbl = new JLabel("Account Number");
 		JLabel commercialBillLbl = new JLabel("Commercial Bill");
 		JLabel privateBillLbl = new JLabel("Private Bill");
 		JLabel billIssueDateLbl = new JLabel("Issue Date");
@@ -81,6 +72,7 @@ public class GenerateBillPanel extends AbstractGuiPanel
 		JLabel billMonthLbl = new JLabel("Billing Month");
 		JLabel billYearLbl = new JLabel("Billing Year");
 
+		accountNumbertxt = new JTextField(10);
 		commercialBilltxt = new JTextField(10);
 		privateBilltxt = new JTextField(10);
 		billIssueDate = new JXDatePicker();
@@ -97,6 +89,12 @@ public class GenerateBillPanel extends AbstractGuiPanel
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints c = new GridBagConstraints();
+
+		setGridBagConstraints(c, 0, 0, GridBagConstraints.LINE_START, 10, 0);
+		p.add(accountNumberLbl, c);
+
+		setGridBagConstraints(c, 1, 0, GridBagConstraints.LINE_END, 10, 10);
+		p.add(accountNumbertxt, c);
 
 		setGridBagConstraints(c, 0, 1, GridBagConstraints.LINE_START, 10, 0);
 		p.add(commercialBillLbl, c);
@@ -134,13 +132,14 @@ public class GenerateBillPanel extends AbstractGuiPanel
 		setGridBagConstraints(c, 1, 6, GridBagConstraints.LINE_END, 10, 10);
 		p.add(billingYearCbx, c);
 
+		initFields();
 		return p;
 	}
 
 	@Override
 	public BasicGuiPanel getHeaderPanel()
 	{
-		JLabel headerLbl = new JLabel("Generate Bill");
+		JLabel headerLbl = new JLabel("Generate Customer Bill");
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -172,39 +171,29 @@ public class GenerateBillPanel extends AbstractGuiPanel
 	@Override
 	public GuiPanel getOwningView()
 	{
-		// TODO correct implementation required
-		GuiPanel owningView = null;
-		Container c = this.getParent();
-		if (c instanceof GuiPanel)
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private void initFields()
+	{
+		accountNumbertxt.setText(String.valueOf(customer.getAccountNumber()));
+		String connectionType = customer.getConnectionType();
+		if ("Private".equals(connectionType))
 		{
-			owningView = (GuiPanel) c;
+			commercialBilltxt.setEnabled(false);
+			isCommercial = false;
 		}
-		return owningView;
+		else
+		{
+			privateBilltxt.setEnabled(false);
+			isCommercial = true;
+		}
 	}
 
-	private void setPanelGridBagConstraints(GridBagConstraints c, int gridx, int gridy, int paddingTop)
+	public boolean isCommercial()
 	{
-		c.fill = GridBagConstraints.VERTICAL;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(paddingTop, 0, 0, 0); // top padding
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = gridx;
-		c.gridy = gridy;
-		c.gridwidth = 1;
-	}
-
-	private void setGridBagConstraints(GridBagConstraints c, int gridx, int gridy, int placement, int paddingTop, int paddingLeft)
-	{
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = placement;
-		c.insets = new Insets(paddingTop, paddingLeft, 0, 0); // top and left
-																// padding
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = gridx;
-		c.gridy = gridy;
-		c.gridwidth = 1;
+		return isCommercial;
 	}
 
 	public String getCommercialBill()
@@ -215,6 +204,11 @@ public class GenerateBillPanel extends AbstractGuiPanel
 	public String getPrivateBill()
 	{
 		return privateBilltxt.getText();
+	}
+
+	public String getAccountNumber()
+	{
+		return accountNumbertxt.getText();
 	}
 
 	public String getBillingMonth()
@@ -235,5 +229,18 @@ public class GenerateBillPanel extends AbstractGuiPanel
 	public Date getBillDueDate()
 	{
 		return billDueDate.getDate();
+	}
+
+	private void setGridBagConstraints(GridBagConstraints c, int gridx, int gridy, int placement, int paddingTop, int paddingLeft)
+	{
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = placement;
+		c.insets = new Insets(paddingTop, paddingLeft, 0, 0); // top and left
+																// padding
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = gridx;
+		c.gridy = gridy;
+		c.gridwidth = 1;
 	}
 }

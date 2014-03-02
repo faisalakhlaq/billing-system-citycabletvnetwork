@@ -47,7 +47,8 @@ public class BillingSystemToolBar extends JToolBar
 
 	private void addGenerateBillBtn()
 	{
-		ToolBarButton generateBillBtn = new ToolBarButton("Generate Bill", "/resources/generate_bill.png", new GenerateBillPanelCaller());
+		// this button generates the bill for all customers
+		ToolBarButton generateBillBtn = new ToolBarButton("Generate Bill for all customers", "/resources/generate_bill.png", new GenerateBillPanelCaller(false));
 		this.add(generateBillBtn);
 	}
 

@@ -7,7 +7,8 @@ advance INT,
 nic_number VARCHAR(20),
 telephone int,
 connection_type VARCHAR(15),
-connection_fee int
+connection_fee int,
+area_code int
 );
 
 

@@ -59,8 +59,7 @@ public class AddNewCustomerPanel extends BasicGuiPanel
 
 	private JTextField telNumbertxt;
 
-	@SuppressWarnings("rawtypes")
-	private JComboBox connectionTypesCbx;
+	private JComboBox<String> connectionTypesCbx;
 
 	private JTextField connectionFeetxt;
 
@@ -111,7 +110,7 @@ public class AddNewCustomerPanel extends BasicGuiPanel
 		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
 		savebtn = new JButton("Save");
-		savebtn.addActionListener(new AddNewCustomer());
+		savebtn.addActionListener(new AddNewCustomerListener());
 		resetbtn = new JButton("Reset");
 		resetbtn.addActionListener(new ResetFieldsListener());
 
@@ -257,6 +256,11 @@ public class AddNewCustomerPanel extends BasicGuiPanel
 		c.gridwidth = 1;
 	}
 
+	/**
+	 * Retrieves the area codes from the database
+	 * <p>
+	 * if no area codes are returned then returns an empty model
+	 */
 	private ComboBoxModel<Integer> getAreaCodes()
 	{
 		AreaCodeHandler handler = new AreaCodeHandler();
@@ -293,7 +297,7 @@ public class AddNewCustomerPanel extends BasicGuiPanel
 		}
 	}
 
-	private class AddNewCustomer implements ActionListener
+	private class AddNewCustomerListener implements ActionListener
 	{
 		@Override
 		public void actionPerformed(ActionEvent arg0)
@@ -364,6 +368,7 @@ public class AddNewCustomerPanel extends BasicGuiPanel
 			{
 				c.setConnectionFee(Integer.parseInt(connectionFee));
 			}
+			c.setAreaCode(Integer.valueOf(String.valueOf(areaCodeCbx.getSelectedItem())));
 			addNewCustomer(c);
 		}
 
