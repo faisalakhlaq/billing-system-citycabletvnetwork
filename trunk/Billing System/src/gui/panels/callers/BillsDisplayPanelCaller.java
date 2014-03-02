@@ -3,7 +3,7 @@ package gui.panels.callers;
 import gui.BillingSystemDesktopPane;
 import gui.dialog.MessageDialog;
 import gui.panels.BillPanel;
-import gui.panels.BillsTablePanel;
+import gui.panels.DisplayAllBillsPanel;
 
 import java.util.Vector;
 
@@ -20,7 +20,7 @@ public class BillsDisplayPanelCaller
 		else
 		{
 			BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-			desktop.addPanel("Customer Bill", new BillsTablePanel(bills));
+			desktop.addPanel("Customer Bill", new DisplayAllBillsPanel(bills));
 		}
 	}
 
@@ -28,8 +28,9 @@ public class BillsDisplayPanelCaller
 	{
 		if (bill == null)
 		{
-			new MessageDialog("Error", "No bill data to be display");
+			new MessageDialog("Error", "No bill data to be displayed");
 		}
+		else
 		{
 			BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
 			desktop.addPanel("Customer Bill", new BillPanel(bill));

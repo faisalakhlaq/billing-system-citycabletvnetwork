@@ -18,6 +18,108 @@ public class BillHandler
 	{
 	}
 
+	public void deleteBill(int billNumber) throws Exception
+	{
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		Statement st = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database. conection = null!");
+		}
+		try
+		{
+			st = conn.createStatement();
+			// The execute method return boolean value. check what is the
+			// meaning of it
+			st.execute("Delete from Bill where bill_number = " + billNumber + ";");
+		}
+		catch (Exception e1)
+		{
+			Logger.getGlobal().severe("Unable to delete Bill: " + e1.getMessage());
+			System.out.println("SQLException: " + e1.getMessage());
+			e1.printStackTrace();
+			throw new Exception("Unable to delete Bill!" + e1.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (st != null)
+				{
+					st.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while closing the connection or statement: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new SQLException("Error occured while closing the connection or statement. " + e1.getMessage());
+			}
+		}
+	}
+
+	public void updateBill(Bill b) throws Exception
+	{
+		if (b == null)
+		{
+			throw new Exception("Unable to pay the bill. Bill = NULL!");
+		}
+
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		PreparedStatement stmt = null;
+		Statement st = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database! conn = null");
+		}
+		try
+		{
+			st = conn.createStatement();
+			String query = "Update BILL set received_amount = '" + b.getReceivedAmount() + "', received_by = '" + b.getReceivedBy() + "', paid = '" + (b.getPaid() == true ? 1 : 0)
+					+ "' where bill_number = '" + b.getBillNumber() + "';";
+			System.out.println("Query Executed: " + query);
+			Logger.getGlobal().fine("Query Executed: " + query);
+			st.execute(query);
+		}
+		catch (SQLException e)
+		{
+			Logger.getGlobal().severe("Error occured while updating - paying bill: " + e.getMessage());
+			System.out.println("SQLException: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Unable to update - pay bill. " + e.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while updating - paying: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new Exception("Unable to update - pay. " + e1.getMessage());
+			}
+		}
+	}
+
 	/**
 	 * Query the database
 	 * 

@@ -22,6 +22,8 @@ public class Customer implements ModelObject
 
 	private int connectionFee;
 
+	private int areaCode;
+
 	public Customer()
 	{
 
@@ -131,6 +133,16 @@ public class Customer implements ModelObject
 		this.advance = connectionFee;
 	}
 
+	public int getAreaCode()
+	{
+		return areaCode;
+	}
+
+	public void setAreaCode(int areaCode)
+	{
+		this.areaCode = areaCode;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -139,9 +151,12 @@ public class Customer implements ModelObject
 
 		Customer c = (Customer) obj;
 
+		// if(this.hashCode() == c.hashCode()) // TODO check if hashcode needs
+		// to be checked here
 		if (this.accountNumber == c.getAccountNumber() && this.date.equals(c.getDate()) && this.customerName.equals(c.getCustomerName())
 				&& this.customerAddress.equals(c.getCustomerAddress()) && this.advance == c.getAdvance() && this.nicNumber.equals(c.getNicNumber())
-				&& this.telNumber == c.getTelNumber() && this.connectionType.equals(c.getConnectionType()) && this.connectionFee == c.getConnectionFee())
+				&& this.telNumber == c.getTelNumber() && this.connectionType.equals(c.getConnectionType()) && this.connectionFee == c.getConnectionFee()
+				&& this.areaCode == c.getAreaCode())
 		{
 			equal = true;
 		}

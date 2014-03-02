@@ -1,8 +1,7 @@
 package database.callers;
 
-import gui.BillingSystemDesktopPane;
 import gui.dialog.MessageDialog;
-import gui.panels.ShowAllCustomersPanel;
+import gui.panels.callers.DisplayCustomersPanelCaller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +9,8 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import database.CustomerHandler;
-
 import model.Customer;
+import database.CustomerHandler;
 
 public class ViewAllCustomersCaller implements ActionListener
 {
@@ -29,8 +27,8 @@ public class ViewAllCustomersCaller implements ActionListener
 				{
 					CustomerHandler custHandler = new CustomerHandler();
 					Vector<Customer> customerList = custHandler.getAllCustomers();
-					BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-					desktop.addPanel("All Customers", new ShowAllCustomersPanel(customerList));
+					DisplayCustomersPanelCaller caller = new DisplayCustomersPanelCaller(customerList);
+					caller.perform();
 				}
 				catch (Exception e)
 				{

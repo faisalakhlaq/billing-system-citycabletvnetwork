@@ -19,6 +19,124 @@ public class AreaCodeHandler
 	{
 	}
 
+	/**
+	 * Provide the area name and the corresponding code will be retrieved for it
+	 */
+	public int searchAreaCode(String areaName) throws Exception
+	{
+		int areaCode = 0;
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		PreparedStatement st = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database. conection = null!");
+		}
+		try
+		{
+			st = conn.prepareStatement("Select area_code from area_codes where area_name = ?");
+			st.setString(1, areaName);
+			ResultSet rs = st.executeQuery();
+
+			if (rs.next())
+			{
+				areaCode = rs.getInt("area_code");
+			}
+		}
+		catch (Exception e1)
+		{
+			Logger.getGlobal().severe("Unable to retrieve area code from the database: " + e1.getMessage());
+			System.out.println("SQLException: " + e1.getMessage());
+			e1.printStackTrace();
+			throw new Exception("Unable to retrieve area code from the database!" + e1.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (st != null)
+				{
+					st.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while closing the connection or statement: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new SQLException("Error occured while closing the connection or statement. " + e1.getMessage());
+			}
+		}
+		return areaCode;
+	}
+
+	public Vector<AreaCode> getAllAreaCodes() throws Exception
+	{
+		Vector<AreaCode> codes = null;
+
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		Statement stmt = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database!");
+		}
+		try
+		{
+			stmt = conn.createStatement();
+			String query = "SELECT * FROM AREA_CODES;";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs != null)
+			{
+				codes = new Vector<AreaCode>();
+				while (rs.next())
+				{
+					AreaCode code = new AreaCode();
+					code.setAreaCode(rs.getInt("area_code"));
+					code.setAreaName(rs.getString("area_name"));
+
+					codes.add(code);
+				}
+			}
+		}
+		catch (Exception e1)
+		{
+			Logger.getGlobal().severe("Unable to retrieve area codes from the database. " + e1.getMessage());
+			System.out.println("SQLException: " + e1.getMessage());
+			e1.printStackTrace();
+			throw new Exception("Unable to retrieve area codes data from the database!<p>" + e1.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while closing the connection or statement: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new SQLException("Error occured while closing the connection or statement.");
+			}
+		}
+		return codes;
+	}
+
 	public Vector<Integer> getCodes() throws Exception
 	{
 		Vector<Integer> codes = null;
@@ -51,7 +169,7 @@ public class AreaCodeHandler
 			Logger.getGlobal().severe("Unable to retrieve area codesfrom the database: " + e1.getMessage());
 			System.out.println("SQLException: " + e1.getMessage());
 			e1.printStackTrace();
-			throw new Exception("Unable to retrieve area codes data from the database!");
+			throw new Exception("Unable to retrieve area codes data from the database!" + e1.getMessage());
 		}
 		finally
 		{

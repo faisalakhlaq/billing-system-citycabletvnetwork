@@ -23,6 +23,7 @@ import utils.Helper;
 import database.AreaCodeHandler;
 import database.callers.DeleteAreaCodeCaller;
 
+/** Allows addition, deletion or updating the area code */
 @SuppressWarnings("serial")
 public class AreaCodePanel extends AbstractGuiPanel
 {
@@ -37,6 +38,8 @@ public class AreaCodePanel extends AbstractGuiPanel
 	private JButton resetBtn;
 
 	private JButton deleteBtn;
+
+	private JButton updateBtn;
 
 	public AreaCodePanel()
 	{
@@ -121,6 +124,8 @@ public class AreaCodePanel extends AbstractGuiPanel
 	{
 		resetBtn = new JButton("Reset");
 		resetBtn.addActionListener(new ResetFieldsListener());
+		updateBtn = new JButton("Update");
+		// resetBtn.addActionListener(new ResetFieldsListener());
 		deleteBtn = new JButton("Delete");
 		deleteBtn.addActionListener(new DeleteAreaCode());
 		saveBtn = new JButton("Save");
@@ -131,6 +136,7 @@ public class AreaCodePanel extends AbstractGuiPanel
 		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
 		p.add(resetBtn);
+		p.add(updateBtn);
 		p.add(deleteBtn);
 		p.add(saveBtn);
 		p.add(exitBtn);

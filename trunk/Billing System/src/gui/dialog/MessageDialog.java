@@ -37,9 +37,11 @@ public class MessageDialog extends BillingSystemAbstractDialog
 		validate();
 	}
 
+	/**
+	 * */
 	public int showConfirmDialog(String title, String message)
 	{
-		int selection = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		int selection = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		return selection;
 	}

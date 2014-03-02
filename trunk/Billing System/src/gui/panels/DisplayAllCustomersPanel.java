@@ -14,32 +14,30 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import model.Bill;
-import table.BillTableModel;
+import model.Customer;
+import table.CustomerTableModel;
 import table.TableSorter;
 
 @SuppressWarnings("serial")
-public class BillsTablePanel extends AbstractGuiPanel
+public class DisplayAllCustomersPanel extends BasicGuiPanel
 {
 	private JButton exitbtn;
 
-	private Vector<Bill> billList;
+	private JButton refreshbtn;
+
+	// private JTable customerTable;
+
+	private Vector<Customer> customersList;
 
 	private String[] columnNames =
-	{ "Bill Number", "Issue Date", "Due Date", "Account Number", "Billing Month", "Billing Year", "Payable Amount", "Received Amount", "Received By", "Paid" };
+	{ "Account Number", "Date", "Name", "Address", "Advance", "NIC number", "Telephone Number", "Connection Fee", "Conection Type", "Area Code" };
 
-	public BillsTablePanel(Vector<Bill> billList)
+	public DisplayAllCustomersPanel(Vector<Customer> customers)
 	{
-		this.billList = billList;
-		initPanel();
-	}
-
-	@Override
-	public void initPanel()
-	{
-		BasicGuiPanel header = getHeaderPanel();
-		BasicGuiPanel fieldsPanel = getCenterPanel();
-		BasicGuiPanel btnPanel = getButtonPanel();
+		customersList = customers;
+		BasicGuiPanel header = configureHeader();
+		BasicGuiPanel fieldsPanel = configureFieldsPanel();
+		BasicGuiPanel btnPanel = configureBtnPanel();
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -72,10 +70,32 @@ public class BillsTablePanel extends AbstractGuiPanel
 		add(btnPanel, c);
 	}
 
-	@Override
-	public BasicGuiPanel getCenterPanel()
+	private BasicGuiPanel configureBtnPanel()
 	{
-		BillTableModel model = new BillTableModel(billList, columnNames);
+		exitbtn = new JButton("Exit");
+		exitbtn.addActionListener(new CloseViewCaller());
+
+		refreshbtn = new JButton("Refresh");
+		refreshbtn.addActionListener(new CloseViewCaller());
+
+		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
+		p.add(refreshbtn);
+		p.add(exitbtn);
+
+		return p;
+	}
+
+	private BasicGuiPanel configureFieldsPanel()
+	{
+		// customerTable = new JTable();
+		CustomerTableModel model = new CustomerTableModel(customersList, columnNames);
+		// customerTable.setModel(model);
+
+		// //////////////////////////////////////////////////////////////////////
+
+		/*
+		 * Add this code after adding the TableSorter
+		 */
 		TableSorter sorter = new TableSorter(model); // ADDED THIS
 		// JTable table = new JTable(new MyTableModel()); //OLD
 		JTable table = new JTable(sorter); // NEW
@@ -88,6 +108,8 @@ public class BillsTablePanel extends AbstractGuiPanel
 		// Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(table);
 
+		// //////////////////////////////////////////////////////////////////////
+		// JScrollPane scrollPane = new JScrollPane(customerTable);
 		scrollPane.setPreferredSize(new Dimension(1000, 500));
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
@@ -107,10 +129,9 @@ public class BillsTablePanel extends AbstractGuiPanel
 		return p;
 	}
 
-	@Override
-	public BasicGuiPanel getHeaderPanel()
+	private BasicGuiPanel configureHeader()
 	{
-		JLabel headerLbl = new JLabel("Bill Information");
+		JLabel headerLbl = new JLabel("Customer Information");
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -128,24 +149,4 @@ public class BillsTablePanel extends AbstractGuiPanel
 
 		return headerPanel;
 	}
-
-	@Override
-	public BasicGuiPanel getButtonPanel()
-	{
-		exitbtn = new JButton("Exit");
-		exitbtn.addActionListener(new CloseViewCaller());
-
-		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
-		p.add(exitbtn);
-
-		return p;
-	}
-
-	@Override
-	public GuiPanel getOwningView()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

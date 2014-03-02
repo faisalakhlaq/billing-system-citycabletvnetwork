@@ -27,6 +27,8 @@ public class CustomerTableModel extends AbstractTableModel
 
 	private static final int CONNECTION_FEE = 8;
 
+	private static final int AREA_CODE = 9;
+
 	private String[] columnNames;
 
 	private Vector<Customer> data;
@@ -78,6 +80,8 @@ public class CustomerTableModel extends AbstractTableModel
 			return record.getConnectionType();
 		case CONNECTION_FEE:
 			return record.getConnectionFee();
+		case AREA_CODE:
+			return record.getAreaCode();
 		default:
 			return new Object();
 		}
