@@ -15,10 +15,13 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -26,6 +29,8 @@ import javax.swing.border.EtchedBorder;
 import model.Bill;
 import model.CompanyInformation;
 import model.Customer;
+import table.CustomerBillHistoryTableModel;
+import table.TableSorter;
 
 public class PrintBillPanel extends BasicGuiPanel implements Printable
 {
@@ -71,11 +76,26 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 
 	private Bill bill = null;
 
-	/** Provide the customer and bill list to get the printed bills */
-	public PrintBillPanel(Customer customer, Bill bill)
+	private Vector<Bill> previousBills = null;
+
+	private String[] columnNames =
+	{ "Billing Month", "Billing Year", "Payable Amount", "Paid" };
+
+	/**
+	 * Provide the customer and bill list to get the printed bills
+	 * 
+	 * @param Customer
+	 *            for which bill is to be printed
+	 *            <p>
+	 *            Bill to be printed
+	 *            <p>
+	 *            Vector<Bill> previous bills of the customer
+	 * */
+	public PrintBillPanel(Customer customer, Bill bill, Vector<Bill> previousBills)
 	{
 		this.customer = customer;
 		this.bill = bill;
+		this.previousBills = previousBills;
 		configurePanel();
 	}
 
@@ -199,6 +219,16 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		c.gridwidth = 1;
 		p.add(issueDatetxt, c);
 
+		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridx = 2;
+		c.gridy = 1;
+		c.gridwidth = 0;
+		c.gridheight = 20;
+		p.add(getBillHistoryPanel(), c);
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.LINE_START;
 		c.weightx = 0.25;
@@ -206,6 +236,7 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 1;
+		c.gridheight = 1;
 		p.add(dueDateLbl, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -637,6 +668,44 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		receivedAmounttxt.setText(String.valueOf(bill.getReceivedAmount()));
 		balancetxt.setText(String.valueOf(""));
 		signatureReceivedAuthoritytxt.setText(String.valueOf(bill.getReceivedBy()));
+	}
+
+	/**
+	 * Returns the panel which displays the bill history of the customer. Panel
+	 * includes a table with bill records
+	 */
+	private BasicGuiPanel getBillHistoryPanel()
+	{
+		BasicGuiPanel billHistoryPanel = new BasicGuiPanel();
+		CustomerBillHistoryTableModel model = new CustomerBillHistoryTableModel(previousBills, columnNames);
+		TableSorter sorter = new TableSorter(model); // ADDED THIS
+		// JTable table = new JTable(new MyTableModel()); //OLD
+		JTable table = new JTable(sorter); // NEW
+		sorter.setTableHeader(table.getTableHeader()); // ADDED THIS
+		// table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+
+		// Set up tool tips for column headers.
+		table.getTableHeader().setToolTipText("Click to specify sorting; Control-Click to specify secondary sorting");
+
+		// Create the scroll pane and add the table to it.
+		JScrollPane scrollPane = new JScrollPane(table);
+
+		// scrollPane.setPreferredSize(new Dimension(1000, 500));
+
+		billHistoryPanel.setOpaque(true);
+		billHistoryPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.weightx = 0.25;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		billHistoryPanel.add(scrollPane, c);
+
+		return billHistoryPanel;
 	}
 
 	private class ResetFieldsListener implements ActionListener

@@ -46,10 +46,10 @@ public class PrintBillPanelCaller implements ActionListener
 			Bill bill = getBill();
 
 			Customer customer = getCustomer(bill.getAccountNumber());
-			Vector<Bill> bills = getBillHistory(customer.getAccountNumber());
+			Vector<Bill> previousBills = getBillHistory(customer.getAccountNumber());
 
 			BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-			desktop.addPanel("Print Bill", new PrintBillPanel(customer, bill));
+			desktop.addPanel("Print Bill", new PrintBillPanel(customer, bill, previousBills));
 		}
 		catch (Exception e)
 		{

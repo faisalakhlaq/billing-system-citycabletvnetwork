@@ -1,6 +1,8 @@
 package utils;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Helper
 {
@@ -49,5 +51,18 @@ public class Helper
 		String[] months =
 		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
 		return months;
+	}
+
+	public static String getMonth(int monthNumber)
+	{
+		String[] months =
+		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
+		Map<Integer, String> monthsMap = new HashMap<Integer, String>(12);
+
+		for (int i = 0; i < 12; i++)
+		{
+			monthsMap.put(i + 1, months[i]);
+		}
+		return monthsMap.get(monthNumber);
 	}
 }
