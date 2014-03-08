@@ -21,7 +21,6 @@ public class BillPaymentPanelCaller implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
-		BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
 		Customer c = null;
 
 		if (panel != null)
@@ -29,6 +28,7 @@ public class BillPaymentPanelCaller implements ActionListener
 			c = panel.getCustomer();
 		}
 
+		BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
 		desktop.addPanel("Bill Payment", new BillPaymentPanel(c));
 	}
 

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -16,6 +17,80 @@ public class BillHandler
 
 	public BillHandler()
 	{
+	}
+
+	/**
+	 * Returns the bills paid among the specified dates
+	 * @throws Exception 
+	 */
+	public void getSales(Date fromDate, Date toDate) throws Exception
+	{
+		Vector<Bill> billList = null;
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		Statement stmt = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Cannot get a connection to the database");
+		}
+		try
+		{
+			stmt = conn.createStatement();
+			String query = "Select * from bill where account_number = " + fromDate + ";";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs != null)
+			{
+				billList = new Vector<Bill>();
+				while (rs.next())
+				{
+					Bill bill = new Bill();
+
+					bill.setBillNumber(rs.getInt("bill_number"));
+					bill.setIssueDate(rs.getDate("issue_date"));
+					bill.setDueDate(rs.getDate("due_date"));
+					bill.setAccountNumber(rs.getInt("account_number"));
+					bill.setMonth(rs.getString("month"));
+					bill.setYear(rs.getInt("year"));
+					bill.setPayableAmount(rs.getInt("payable_amount"));
+					bill.setReceivedAmount(rs.getInt("received_amount"));
+					bill.setReceivedBy(rs.getString("received_by"));
+					bill.setPaid(rs.getBoolean("paid"));
+
+					billList.add(bill);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Logger.getGlobal().severe("Error occured while retrieving customer bill: " + e.getMessage());
+			System.out.println("SQLException: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error while retrieving customer bill:" + e.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (stmt != null)
+				{
+					stmt.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while retrieving customer bills: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new Exception("Unable to retrieve customer bills. " + e1.getMessage());
+			}
+		}
+//		return null;
 	}
 
 	public void deleteBill(int billNumber) throws Exception

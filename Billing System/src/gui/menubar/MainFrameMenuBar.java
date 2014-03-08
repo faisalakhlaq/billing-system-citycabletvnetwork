@@ -7,7 +7,9 @@ import gui.caller.ExitSystemCaller;
 import gui.caller.ShowStatusbarCaller;
 import gui.panels.callers.AddAreaCodePanelCaller;
 import gui.panels.callers.AddCustomerPanelCaller;
+import gui.panels.callers.AdvertisementBillPanelCaller;
 import gui.panels.callers.DisplayAllAreaCodesPanelCaler;
+import gui.panels.callers.GenerateSalesPanelCaller;
 import gui.panels.callers.SearchCustomerPanelCaller;
 
 import java.awt.event.ActionEvent;
@@ -134,6 +136,14 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		ImageIcon searchIcon = new ImageIcon(getClass().getResource("/resources/search.png"));
 		searchCustomerBillMenuItem.setIcon(searchIcon);
 		searchCustomerBillMenuItem.setToolTipText("Search a Customer's bill");
+
+		JMenuItem advertisementBillMenuItem = addMenuItem(billMenu, "Advertisement Bill");
+		advertisementBillMenuItem.addActionListener(new AdvertisementBillPanelCaller());
+		advertisementBillMenuItem.setToolTipText("Advertisement bill");
+
+		JMenuItem salesReportMenuItem = addMenuItem(billMenu, "Sales");
+		salesReportMenuItem.addActionListener(new GenerateSalesPanelCaller());
+		salesReportMenuItem.setToolTipText("Generate Sales Report");
 	}
 
 	private void configureAreaCodeMenu(JMenu areaCodeMenu)
