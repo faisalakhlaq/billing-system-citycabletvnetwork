@@ -22,7 +22,8 @@ year INT,
 payable_amount INT,
 received_amount INT,
 received_by VARCHAR(20),
-paid BOOL
+paid BOOL,
+date_paid Date
 );
 
 ALTER TABLE BILL AUTO_INCREMENT = 10000;

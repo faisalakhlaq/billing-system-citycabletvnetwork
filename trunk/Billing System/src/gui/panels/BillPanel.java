@@ -63,6 +63,8 @@ public class BillPanel extends AbstractGuiPanel
 
 	private JButton printBtn;
 
+	private JXDatePicker datePaid;
+
 	public BillPanel(Bill b)
 	{
 		bill = b;
@@ -105,6 +107,7 @@ public class BillPanel extends AbstractGuiPanel
 		JLabel receivedAmountLbl = new JLabel("Received Amount");
 		JLabel receivedByLbl = new JLabel("Received By");
 		JLabel paidLbl = new JLabel("Paid");
+		JLabel datePaidLbl = new JLabel("Date Paid");
 
 		billNumberTxt = new JTextField(10);
 		billNumberTxt.setText(String.valueOf(bill.getBillNumber()));
@@ -137,6 +140,8 @@ public class BillPanel extends AbstractGuiPanel
 		{
 			paidCbx.setSelectedIndex(1);
 		}
+		datePaid = new JXDatePicker();
+		datePaid.setDate(bill.getDatePaid());
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -201,6 +206,12 @@ public class BillPanel extends AbstractGuiPanel
 
 		setGridBagConstraints(c, 1, 10, GridBagConstraints.LINE_END, 10, 10);
 		p.add(paidCbx, c);
+
+		setGridBagConstraints(c, 0, 11, GridBagConstraints.LINE_START, 10, 0);
+		p.add(datePaidLbl, c);
+
+		setGridBagConstraints(c, 1, 11, GridBagConstraints.LINE_END, 10, 10);
+		p.add(datePaid, c);
 
 		return p;
 	}
@@ -306,6 +317,7 @@ public class BillPanel extends AbstractGuiPanel
 		accountNumberTxt.setEditable(edit);
 		billingMonthCbx.setEnabled(edit);
 		billingYearCbx.setEnabled(edit);
+		// datePaid.setEditable(edit);
 		// payableAmountTxt.setEditable(edit);
 		// receivedAmountTxt.setEditable(edit);
 		// receivedByTxt.setEditable(edit);
@@ -362,6 +374,7 @@ public class BillPanel extends AbstractGuiPanel
 		{
 			bill.setPaid(false);
 		}
+		bill.setDatePaid(datePaid.getDate());
 		return bill;
 	}
 }

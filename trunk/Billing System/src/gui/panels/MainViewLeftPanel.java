@@ -28,6 +28,8 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 
 	private JTextField accountNumberTxt = new JTextField(10);
 
+	private JTextField adBillNumberTxt = new JTextField(10);
+
 	private JComboBox<String> areaCbx = null;
 
 	public MainViewLeftPanel()
@@ -40,7 +42,6 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 	@Override
 	public void initPanel()
 	{
-		// TODO Auto-generated method stub
 		addPanels();
 	}
 
@@ -50,8 +51,12 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 		JLabel areaLbl = new JLabel("Area");
 		JLabel billNumberLbl = new JLabel("Bill Number");
 		JLabel accountNumberLbl = new JLabel("Account Number");
+		JLabel adBillLbl = new JLabel("Advertisement Bill Number");
 
 		JButton bill = new JButton("Get Bill");
+		bill.addActionListener(new SearchBillListener());
+
+		JButton adBill = new JButton("Get Bill");
 		bill.addActionListener(new SearchBillListener());
 
 		JButton customer = new JButton("Search Customer");
@@ -79,6 +84,9 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 		p.add(billNumberLbl);
 		p.add(billNumberTxt);
 		p.add(bill);
+		p.add(adBillLbl);
+		p.add(adBillNumberTxt);
+		p.add(adBill);
 		p.add(accountNumberLbl);
 		p.add(accountNumberTxt);
 		p.add(customer);

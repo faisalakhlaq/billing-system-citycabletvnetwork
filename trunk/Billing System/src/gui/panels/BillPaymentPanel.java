@@ -117,9 +117,7 @@ public class BillPaymentPanel extends BasicGuiPanel
 
 		customerNametxt = new JTextField(20);
 		accountNumbertxt = new JTextField(20);
-		String[] months =
-		{ "JAN", "FEB", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
-		billingMonthCombobox = new JComboBox<String>(months);
+		billingMonthCombobox = new JComboBox<String>(Helper.getMonths());
 		amounttxt = new JTextField(20);
 		surchargetxt = new JTextField(20);
 		advertisementBilltxt = new JTextField(20);

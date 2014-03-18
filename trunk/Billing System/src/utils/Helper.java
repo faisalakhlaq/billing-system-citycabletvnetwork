@@ -46,6 +46,25 @@ public class Helper
 		return years;
 	}
 
+	/**
+	 * Returns the specified number of previous and next years
+	 * 
+	 * @param
+	 * @param
+	 * */
+	public static Integer[] getYears(int previousYears, int nextYears)
+	{
+		int totalYears = previousYears + nextYears;
+		Integer[] years = new Integer[totalYears];
+		Calendar cal = Calendar.getInstance();
+		int thisYear = cal.get(Calendar.YEAR);
+
+		for (int i = 0; i < totalYears; i++)
+			years[i] = thisYear - (previousYears - i);
+
+		return years;
+	}
+
 	public static String[] getMonths()
 	{
 		String[] months =

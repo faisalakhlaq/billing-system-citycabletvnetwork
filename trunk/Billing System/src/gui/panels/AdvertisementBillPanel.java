@@ -75,7 +75,7 @@ public class AdvertisementBillPanel extends AbstractGuiPanel
 		datePicker = new JXDatePicker();
 		accountNumberTxt = new JTextField(10);
 		String[] trueFalse =
-		{ "True", "False" };
+		{ "False", "True" };
 		paidCbx = new JComboBox<String>(trueFalse);
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
@@ -118,7 +118,6 @@ public class AdvertisementBillPanel extends AbstractGuiPanel
 	@Override
 	public BasicGuiPanel getHeaderPanel()
 	{
-
 		JLabel headerLbl = new JLabel("Advertisement Bill");
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
@@ -209,7 +208,11 @@ public class AdvertisementBillPanel extends AbstractGuiPanel
 		}
 		bill.setPayableAmount(Integer.valueOf(payable));
 		bill.setDate(date);
-		bill.setAccountNumber(Integer.valueOf(accountNumberTxt.getText()));
+		String acNo = accountNumberTxt.getText();
+		if (!Helper.isEmpty(acNo) && Helper.isDigit(acNo.trim()))
+		{
+			bill.setAccountNumber(Integer.valueOf(acNo));
+		}
 		if (("True").equalsIgnoreCase(paid))
 		{
 			bill.setPaid(true);
