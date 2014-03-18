@@ -3,34 +3,37 @@ package gui.panels;
 import gui.caller.CloseViewCaller;
 
 import java.awt.ComponentOrientation;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Vector;
+import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import model.AreaCode;
-import table.AreaCodeTableModel;
+import model.AdvertisementBill;
+import model.Bill;
+import model.ModelObject;
+import table.SalesReportTableModel;
 import table.TableSorter;
 
 @SuppressWarnings("serial")
-public class DisplayAllAreaCodesPanel extends AbstractGuiPanel
+public class SalesReportPanel extends AbstractGuiPanel
 {
 	private JButton exitbtn;
 
-	private Vector<AreaCode> areaCodeList;
+	private ArrayList<ModelObject> billList;
 
+	// Type is for weather it is Bill (Private-Commercial) OR Ad-bill
 	private String[] columnNames =
-	{ "Area Name", "Code" };
+	{ "Amount", "Date", "Type", "Account Number" };
 
-	public DisplayAllAreaCodesPanel(Vector<AreaCode> areaCodeList)
+	public SalesReportPanel(ArrayList<ModelObject> billList)
 	{
-		this.areaCodeList = areaCodeList;
+		this.billList = billList;
 		initPanel();
 	}
 
@@ -43,20 +46,16 @@ public class DisplayAllAreaCodesPanel extends AbstractGuiPanel
 	@Override
 	public BasicGuiPanel getCenterPanel()
 	{
-		AreaCodeTableModel model = new AreaCodeTableModel(areaCodeList, columnNames);
-		TableSorter sorter = new TableSorter(model); // ADDED THIS
-		// JTable table = new JTable(new MyTableModel()); //OLD
-		JTable table = new JTable(sorter); // NEW
-		sorter.setTableHeader(table.getTableHeader()); // ADDED THIS
-		// table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		SalesReportTableModel model = new SalesReportTableModel(billList, columnNames);
+		TableSorter sorter = new TableSorter(model);
+		JTable table = new JTable(sorter);
+		sorter.setTableHeader(table.getTableHeader());
 
 		// Set up tool tips for column headers.
 		table.getTableHeader().setToolTipText("Click to specify sorting; Control-Click to specify secondary sorting");
 
 		// Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(table);
-
-		scrollPane.setPreferredSize(new Dimension(1000, 500));
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setOpaque(true);
@@ -78,7 +77,23 @@ public class DisplayAllAreaCodesPanel extends AbstractGuiPanel
 	@Override
 	public BasicGuiPanel getHeaderPanel()
 	{
-		JLabel headerLbl = new JLabel("Area Codes");
+		JLabel headerLbl = new JLabel("Report");
+		JLabel totalAmountLbl = new JLabel("Total Amount = ");
+		JLabel totalLbl = new JLabel();
+
+		int total = 0;
+		for (ModelObject obj : billList)
+		{
+			if (obj instanceof Bill)
+			{
+				total += ((Bill) obj).getReceivedAmount();
+			}
+			else if (obj instanceof AdvertisementBill)
+			{
+				total += ((AdvertisementBill) obj).getPayableAmount();
+			}
+		}
+		totalLbl.setText(String.valueOf(total));
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -93,6 +108,25 @@ public class DisplayAllAreaCodesPanel extends AbstractGuiPanel
 		hc.gridy = 1;
 		hc.gridwidth = 1;
 		headerPanel.add(headerLbl, hc);
+
+		hc.fill = GridBagConstraints.VERTICAL;
+		hc.anchor = GridBagConstraints.CENTER;
+		hc.insets = new Insets(5, 0, 0, 0);
+		hc.weightx = 0.75;
+		hc.weighty = 0;
+		hc.gridx = 0;
+		hc.gridy = 2;
+		hc.gridwidth = 1;
+		headerPanel.add(totalAmountLbl, hc);
+
+		hc.fill = GridBagConstraints.VERTICAL;
+		hc.anchor = GridBagConstraints.CENTER;
+		hc.weightx = 0.75;
+		hc.weighty = 0;
+		hc.gridx = 1;
+		hc.gridy = 2;
+		hc.gridwidth = 1;
+		headerPanel.add(totalLbl, hc);
 
 		return headerPanel;
 	}

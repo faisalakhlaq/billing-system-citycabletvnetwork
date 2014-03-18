@@ -2,7 +2,7 @@ package model;
 
 import java.util.Date;
 
-public class Bill
+public class Bill implements ModelObject
 {
 	private int billNumber;
 
@@ -23,6 +23,8 @@ public class Bill
 	private String receivedBy;
 
 	private Boolean paid;
+
+	private Date datePaid;
 
 	public Bill()
 	{
@@ -126,5 +128,15 @@ public class Bill
 	public void setPaid(Boolean paid)
 	{
 		this.paid = paid;
+	}
+
+	public Date getDatePaid()
+	{
+		return datePaid;
+	}
+
+	public void setDatePaid(Date datePaid)
+	{
+		this.datePaid = datePaid;
 	}
 }

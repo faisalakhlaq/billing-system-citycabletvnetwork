@@ -19,6 +19,8 @@ import javax.swing.JLabel;
 
 import org.jdesktop.swingx.JXDatePicker;
 
+import database.callers.GetSalesCaller;
+
 @SuppressWarnings("serial")
 public class GenerateSalesPanel extends AbstractGuiPanel
 {
@@ -113,7 +115,7 @@ public class GenerateSalesPanel extends AbstractGuiPanel
 		exitBtn.addActionListener(new CloseViewCaller());
 
 		reportBtn = new JButton("Get Report");
-		reportBtn.addActionListener(null); // TODO
+		reportBtn.addActionListener(new GetSalesCaller(GenerateSalesPanel.this));
 
 		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 

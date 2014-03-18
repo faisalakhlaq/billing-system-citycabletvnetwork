@@ -77,7 +77,7 @@ public class DeleteBillCaller implements ActionListener
 		MessageDialog msg = new MessageDialog();
 		int delete = msg.showConfirmDialog("Confirm", "Do you want to delete the bill?");
 
-		if (delete == 1)
+		if (delete == JOptionPane.OK_OPTION)
 		{
 			BillHandler handler = new BillHandler();
 			handler.deleteBill(billNumber);
@@ -106,7 +106,7 @@ public class DeleteBillCaller implements ActionListener
 		MessageDialog msg = new MessageDialog();
 		int delete = msg.showConfirmDialog("Confirm", "Do you want to delete the bill?");
 
-		if (delete == 1)
+		if (delete == JOptionPane.OK_OPTION)
 		{
 			AdvertisementBillHandler handler = new AdvertisementBillHandler();
 			handler.deleteBill(id);

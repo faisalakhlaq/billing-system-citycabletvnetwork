@@ -3,14 +3,17 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
+
+import properties.DBProperties;
 
 public class DBConnection
 {
 	private static String driver = "com.mysql.jdbc.Driver";
 
-	private static String url = "jdbc:mysql://localhost:3306/";
+	// private static String url = "jdbc:mysql://localhost:3306/";
 
-	private static String dbname = "citycabletvnetwork";
+	// private static String dbname = "citycabletvnetwork";
 
 	private static DBConnection instance = null;
 
@@ -61,7 +64,14 @@ public class DBConnection
 
 		try
 		{
-			conn = DriverManager.getConnection(url + dbname, "root", "root");
+			DBProperties DBProp = new DBProperties();
+			Properties prop = DBProp.getPropFile();
+			String dbname = prop.getProperty("dbname");
+			String url = prop.getProperty("url");
+			String user = prop.getProperty("user");
+			String pwd = prop.getProperty("password");
+
+			conn = DriverManager.getConnection(url + dbname, user, pwd);
 		}
 		catch (SQLException ex)
 		{
@@ -77,9 +87,25 @@ public class DBConnection
 		}
 		else
 		{
-			System.out.println("Failed to make database connection!");
+			System.out.println("Failed to get database connection!");
 		}
 		return conn;
+	}
+
+	public static void closeConnection()
+	{
+		if (conn != null)
+		{
+			try
+			{
+				conn.close();
+			}
+			catch (SQLException ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+
 	}
 
 }

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -20,12 +21,15 @@ public class BillHandler
 	}
 
 	/**
-	 * Returns the bills paid among the specified dates
-	 * @throws Exception 
+	 * Returns the bills paid between the specified dates
+	 * 
+	 * @return
+	 * 
+	 * @throws Exception
 	 */
-	public void getSales(Date fromDate, Date toDate) throws Exception
+	public ArrayList<Bill> getSales(Date fromDate, Date toDate) throws Exception
 	{
-		Vector<Bill> billList = null;
+		ArrayList<Bill> billList = null;
 		db = DBConnection.getInstance();
 		Connection conn = db.getConnection();
 		Statement stmt = null;
@@ -37,12 +41,13 @@ public class BillHandler
 		try
 		{
 			stmt = conn.createStatement();
-			String query = "Select * from bill where account_number = " + fromDate + ";";
+			String query = "Select * from bill where " + new java.sql.Date(fromDate.getTime()) + " <= date_paid <= " + new java.sql.Date(toDate.getTime()) + " and paid = True;";
+			System.out.println("Executing Query: " + query);
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs != null)
 			{
-				billList = new Vector<Bill>();
+				billList = new ArrayList<Bill>();
 				while (rs.next())
 				{
 					Bill bill = new Bill();
@@ -57,6 +62,7 @@ public class BillHandler
 					bill.setReceivedAmount(rs.getInt("received_amount"));
 					bill.setReceivedBy(rs.getString("received_by"));
 					bill.setPaid(rs.getBoolean("paid"));
+					bill.setDatePaid(rs.getDate("date_paid"));
 
 					billList.add(bill);
 				}
@@ -64,10 +70,10 @@ public class BillHandler
 		}
 		catch (Exception e)
 		{
-			Logger.getGlobal().severe("Error occured while retrieving customer bill: " + e.getMessage());
+			Logger.getGlobal().severe("Error occured while retrieving paid bills: " + e.getMessage());
 			System.out.println("SQLException: " + e.getMessage());
 			e.printStackTrace();
-			throw new Exception("Error while retrieving customer bill:" + e.getMessage());
+			throw new Exception("Error while retrieving paid bills:" + e.getMessage());
 		}
 		finally
 		{
@@ -84,13 +90,13 @@ public class BillHandler
 			}
 			catch (SQLException e1)
 			{
-				Logger.getGlobal().severe("Error occured while retrieving customer bills: " + e1.getMessage());
+				Logger.getGlobal().severe("Error occured while retrieving paid bills: " + e1.getMessage());
 				System.out.println("SQLException: " + e1.getMessage());
 				e1.printStackTrace();
-				throw new Exception("Unable to retrieve customer bills. " + e1.getMessage());
+				throw new Exception("Unable to retrieve paid bills. " + e1.getMessage());
 			}
 		}
-//		return null;
+		return billList;
 	}
 
 	public void deleteBill(int billNumber) throws Exception
@@ -159,8 +165,9 @@ public class BillHandler
 		try
 		{
 			st = conn.createStatement();
+			java.sql.Date datePaid = (b.getDatePaid() == null) ? null : new java.sql.Date(b.getDatePaid().getTime());
 			String query = "Update BILL set received_amount = '" + b.getReceivedAmount() + "', received_by = '" + b.getReceivedBy() + "', paid = '" + (b.getPaid() == true ? 1 : 0)
-					+ "' where bill_number = '" + b.getBillNumber() + "';";
+					+ "', date_paid = '" + datePaid + "' where bill_number = '" + b.getBillNumber() + "';";
 			System.out.println("Query Executed: " + query);
 			Logger.getGlobal().fine("Query Executed: " + query);
 			st.execute(query);
@@ -233,6 +240,7 @@ public class BillHandler
 				bill.setReceivedAmount(rs.getInt("received_amount"));
 				bill.setReceivedBy(rs.getString("received_by"));
 				bill.setPaid(rs.getBoolean("paid"));
+				bill.setDatePaid(rs.getDate("date_paid"));
 			}
 		}
 		catch (Exception e1)
@@ -305,6 +313,7 @@ public class BillHandler
 					bill.setReceivedAmount(rs.getInt("received_amount"));
 					bill.setReceivedBy(rs.getString("received_by"));
 					bill.setPaid(rs.getBoolean("paid"));
+					bill.setDatePaid(rs.getDate("date_paid"));
 
 					billList.add(bill);
 				}
