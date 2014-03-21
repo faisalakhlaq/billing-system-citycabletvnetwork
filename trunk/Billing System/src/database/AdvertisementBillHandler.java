@@ -19,6 +19,64 @@ public class AdvertisementBillHandler
 	{
 	}
 
+	public AdvertisementBill searchBill(int billNumber) throws Exception
+	{
+		AdvertisementBill bill = null;
+		db = DBConnection.getInstance();
+		Connection conn = db.getConnection();
+		PreparedStatement st = null;
+
+		if (conn == null)
+		{
+			throw new Exception("Unable to connect to the database. conection = null!");
+		}
+		try
+		{
+			st = conn.prepareStatement("Select * from advertisement_bill where id = ?");
+			st.setInt(1, billNumber);
+			ResultSet rs = st.executeQuery();
+
+			if (rs.next())
+			{
+				bill = new AdvertisementBill();
+				bill.setId(rs.getInt("id"));
+				bill.setAccountNumber(rs.getInt("account_number"));
+				bill.setPayableAmount(rs.getInt("payable_amount"));
+				bill.setPaid(rs.getBoolean("paid"));
+				bill.setDate(rs.getDate("date"));
+			}
+		}
+		catch (Exception e1)
+		{
+			Logger.getGlobal().severe("Unable to retrieve advertisememt bill data from the database: " + e1.getMessage());
+			System.out.println("SQLException: " + e1.getMessage());
+			e1.printStackTrace();
+			throw new Exception("Unable to retrieve advertisememt bill data from the database!" + e1.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if (conn != null)
+				{
+					conn.close();
+				}
+				if (st != null)
+				{
+					st.close();
+				}
+			}
+			catch (SQLException e1)
+			{
+				Logger.getGlobal().severe("Error occured while closing the connection or statement: " + e1.getMessage());
+				System.out.println("SQLException: " + e1.getMessage());
+				e1.printStackTrace();
+				throw new SQLException("Error occured while closing the connection or statement. " + e1.getMessage());
+			}
+		}
+		return bill;
+	}
+
 	/**
 	 * Returns the Advertisement bills paid between the specified dates
 	 * 

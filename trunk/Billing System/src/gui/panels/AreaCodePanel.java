@@ -39,7 +39,7 @@ public class AreaCodePanel extends AbstractGuiPanel
 
 	private JButton deleteBtn;
 
-	private JButton updateBtn;
+	private JButton searchBtn;
 
 	public AreaCodePanel()
 	{
@@ -113,7 +113,7 @@ public class AreaCodePanel extends AbstractGuiPanel
 	public BasicGuiPanel getHeaderPanel()
 	{
 		BasicGuiPanel p = new BasicGuiPanel();
-		JLabel label = new JLabel("Add or Delete Area Code");
+		JLabel label = new JLabel("Area Code");
 		p.add(label);
 
 		return p;
@@ -124,19 +124,23 @@ public class AreaCodePanel extends AbstractGuiPanel
 	{
 		resetBtn = new JButton("Reset");
 		resetBtn.addActionListener(new ResetFieldsListener());
-		updateBtn = new JButton("Update");
-		// resetBtn.addActionListener(new ResetFieldsListener());
+
+		searchBtn = new JButton("Search");
+		searchBtn.addActionListener(new SearchAreaListener());
+
 		deleteBtn = new JButton("Delete");
 		deleteBtn.addActionListener(new DeleteAreaCode());
+
 		saveBtn = new JButton("Save");
 		saveBtn.addActionListener(new AddAreaCode());
+
 		exitBtn = new JButton("Exit");
 		exitBtn.addActionListener(new CloseViewCaller());
 
 		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
 		p.add(resetBtn);
-		p.add(updateBtn);
+		p.add(searchBtn);
 		p.add(deleteBtn);
 		p.add(saveBtn);
 		p.add(exitBtn);
@@ -252,6 +256,84 @@ public class AreaCodePanel extends AbstractGuiPanel
 			if (selection == JOptionPane.OK_OPTION)
 			{
 				DeleteAreaCodeCaller.perform(Integer.valueOf(areaCode));
+			}
+		}
+	}
+
+	private class SearchAreaListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			String code = areaCodeTxt.getText();
+			String name = areaNameTxt.getText();
+
+			if (Helper.isEmpty(code) && Helper.isEmpty(name))
+			{
+				new MessageDialog("Error", "Please enter code OR name to search");
+				return;
+			}
+
+			if (!Helper.isEmpty(code))
+			{
+				if (!Helper.isDigit(code.trim()))
+				{
+					new MessageDialog("Error", "Area code can only be a digit");
+					return;
+				}
+				else
+				{
+					AreaCodeHandler handler = new AreaCodeHandler();
+					try
+					{
+						String areaName = handler.searchAreaName(Integer.valueOf(code.trim()));
+						if (areaName != null)
+						{
+							areaNameTxt.setText(areaName);
+						}
+						return;
+					}
+					catch (NumberFormatException e)
+					{
+						new MessageDialog("Error", e.getMessage());
+						return;
+					}
+					catch (Exception e)
+					{
+						new MessageDialog("Error", e.getMessage());
+						return;
+					}
+				}
+			}
+			if (!Helper.isEmpty(name))
+			{
+				if (Helper.isDigit(name.trim()))
+				{
+					new MessageDialog("Error", "Area name can only contain string - alphabets. Digits not allowed");
+					return;
+				}
+				else
+				{
+					try
+					{
+						AreaCodeHandler handler = new AreaCodeHandler();
+						int areaCode = handler.searchAreaCode(name);
+
+						if (areaCode != 0)
+						{
+							areaCodeTxt.setText(String.valueOf(areaCode));
+						}
+						else
+						{
+							new MessageDialog("Sorry", "No area code was found for this area. Check area name spelling or consider adding a new area code");
+						}
+					}
+					catch (Exception e)
+					{
+						new MessageDialog("Error", e.getMessage());
+						return;
+					}
+				}
 			}
 		}
 	}

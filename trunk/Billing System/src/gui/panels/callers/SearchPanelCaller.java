@@ -6,7 +6,7 @@ import gui.panels.SearchPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SearchCustomerPanelCaller implements ActionListener
+public class SearchPanelCaller implements ActionListener
 {
 
 	@Override

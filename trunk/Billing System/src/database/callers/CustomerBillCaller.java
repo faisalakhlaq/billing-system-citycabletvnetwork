@@ -2,6 +2,7 @@ package database.callers;
 
 import gui.dialog.MessageDialog;
 import gui.panels.callers.BillsDisplayPanelCaller;
+import database.AdvertisementBillHandler;
 import database.BillHandler;
 
 public class CustomerBillCaller
@@ -24,12 +25,26 @@ public class CustomerBillCaller
 		}
 	}
 
-	public static void searchBill(int billNumber)
+	/**
+	 * Search customer bill or an advertisement bill.
+	 * <p>
+	 * If the bill to be searched is advertisement bill then the isAdBill flag
+	 * should be set true
+	 */
+	public static void searchBill(int billNumber, boolean isAdBill)
 	{
-		BillHandler handler = new BillHandler();
 		try
 		{
-			BillsDisplayPanelCaller.perform(handler.searchBill(billNumber));
+			if (isAdBill)
+			{
+				AdvertisementBillHandler handler = new AdvertisementBillHandler();
+				BillsDisplayPanelCaller.perform(handler.searchBill(billNumber));
+			}
+			else
+			{
+				BillHandler handler = new BillHandler();
+				BillsDisplayPanelCaller.perform(handler.searchBill(billNumber));
+			}
 		}
 		catch (Exception e)
 		{
