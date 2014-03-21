@@ -4,6 +4,7 @@ import gui.dialog.MessageDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -14,7 +15,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import model.AreaCode;
 import utils.Helper;
 import database.AreaCodeHandler;
 import database.callers.CustomerBillCaller;
@@ -54,10 +54,10 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 		JLabel adBillLbl = new JLabel("Advertisement Bill Number");
 
 		JButton bill = new JButton("Get Bill");
-		bill.addActionListener(new SearchBillListener());
+		bill.addActionListener(new SearchBillListener(false));
 
-		JButton adBill = new JButton("Get Bill");
-		bill.addActionListener(new SearchBillListener());
+		JButton adBill = new JButton("Get Advertisement Bill");
+		adBill.addActionListener(new SearchBillListener(true));
 
 		JButton customer = new JButton("Search Customer");
 		customer.addActionListener(new SearchCuctomerCaller(this));
@@ -126,16 +126,10 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 		ComboBoxModel<String> model = null;
 		try
 		{
-			Vector<AreaCode> areaCodes = handler.getAllAreaCodes();
-			if (areaCodes != null && areaCodes.size() > 0)
-			{
-				Vector<String> areas = new Vector<String>();
-				for (AreaCode a : areaCodes)
-				{
-					areas.add(a.getAreaName());
-				}
-				model = new javax.swing.DefaultComboBoxModel<String>(areas);
-			}
+			ArrayList<String> areaNames = handler.getAreaNames();
+			Vector<String> areas = new Vector<String>();
+			areas.addAll(areaNames);
+			model = new javax.swing.DefaultComboBoxModel<String>(areas);
 		}
 		catch (Exception e)
 		{
@@ -155,10 +149,29 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 
 	private class SearchBillListener implements ActionListener
 	{
+		/**
+		 * FLag to check if the bill to be searched is advertisement bill or not
+		 */
+		private boolean isAdBill = false;
+
+		public SearchBillListener(boolean isAdBill)
+		{
+			this.isAdBill = isAdBill;
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			String billNumber = billNumberTxt.getText();
+			String billNumber = null;
+
+			if (isAdBill)
+			{
+				billNumber = adBillNumberTxt.getText();
+			}
+			else
+			{
+				billNumber = billNumberTxt.getText();
+			}
 			if (Helper.isEmpty(billNumber))
 			{
 				new MessageDialog("No number provided", "Bill number cannot be empty");
@@ -169,19 +182,17 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 				new MessageDialog("Wrong number", "Bill number can only contain digits");
 				return;
 			}
-			CustomerBillCaller.searchBill(Integer.valueOf(billNumber));
+			CustomerBillCaller.searchBill(Integer.valueOf(billNumber), isAdBill);
 		}
 	}
 
 	private class ViewAreaCustomersListener implements ActionListener
 	{
-
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String areaName = String.valueOf(areaCbx.getSelectedItem());
 			ViewAreaCustomersCaller.perform(areaName);
 		}
-
 	}
 }

@@ -237,11 +237,11 @@ public class AdvertisementBillPanel extends AbstractGuiPanel
 		accountNumberTxt.setText(String.valueOf(bill.getAccountNumber()));
 		if (bill.getPaid())
 		{
-			paidCbx.setSelectedIndex(0);
+			paidCbx.setSelectedIndex(1);
 		}
 		else
 		{
-			paidCbx.setSelectedIndex(1);
+			paidCbx.setSelectedIndex(0);
 		}
 	}
 }

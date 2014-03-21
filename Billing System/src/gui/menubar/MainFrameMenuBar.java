@@ -10,7 +10,7 @@ import gui.panels.callers.AddCustomerPanelCaller;
 import gui.panels.callers.AdvertisementBillPanelCaller;
 import gui.panels.callers.DisplayAllAreaCodesPanelCaler;
 import gui.panels.callers.GenerateSalesPanelCaller;
-import gui.panels.callers.SearchCustomerPanelCaller;
+import gui.panels.callers.SearchPanelCaller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -88,10 +88,10 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		addCustomerMenuItem.addActionListener(new AddCustomerPanelCaller());
 
 		JMenuItem deleteCustomerMenuItem = addMenuItem(customerMenu, "Search and Delete Customer");
-		deleteCustomerMenuItem.addActionListener(new SearchCustomerPanelCaller());
+		deleteCustomerMenuItem.addActionListener(new SearchPanelCaller());
 
 		JMenuItem searchCustomerMenuItem = addMenuItem(customerMenu, "Search Customer");
-		searchCustomerMenuItem.addActionListener(new SearchCustomerPanelCaller());
+		searchCustomerMenuItem.addActionListener(new SearchPanelCaller());
 
 		JMenuItem viewAllCustomerMenuItem = addMenuItem(customerMenu, "View All Customers");
 		viewAllCustomerMenuItem.addActionListener(new ViewAllCustomersCaller());
@@ -131,15 +131,15 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		printAllBillsMenuItem.setIcon(printIcon);
 		printAllBillsMenuItem.setToolTipText("Print out all Bills");
 
-		JMenuItem searchCustomerBillMenuItem = addMenuItem(billMenu, "Customer Bill");
-		// exitMenuItem.addActionListener(new ExitSystemCaller());
+		JMenuItem searchBillMenuItem = addMenuItem(billMenu, "Search Bill");
+		searchBillMenuItem.addActionListener(new SearchPanelCaller());
 		ImageIcon searchIcon = new ImageIcon(getClass().getResource("/resources/search.png"));
-		searchCustomerBillMenuItem.setIcon(searchIcon);
-		searchCustomerBillMenuItem.setToolTipText("Search a Customer's bill");
+		searchBillMenuItem.setIcon(searchIcon);
+		searchBillMenuItem.setToolTipText("Search a bill");
 
 		JMenuItem advertisementBillMenuItem = addMenuItem(billMenu, "Advertisement Bill");
 		advertisementBillMenuItem.addActionListener(new AdvertisementBillPanelCaller());
-		advertisementBillMenuItem.setToolTipText("Advertisement bill");
+		advertisementBillMenuItem.setToolTipText("Add Advertisement bill");
 
 		JMenuItem salesReportMenuItem = addMenuItem(billMenu, "Sales");
 		salesReportMenuItem.addActionListener(new GenerateSalesPanelCaller());
@@ -154,6 +154,9 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 
 		JMenuItem addAreaCode = addMenuItem(areaCodeMenu, "Add New Area Code");
 		addAreaCode.addActionListener(new AddAreaCodePanelCaller());
+
+		JMenuItem searchAreaCode = addMenuItem(areaCodeMenu, "Search Area Code");
+		searchAreaCode.addActionListener(new AddAreaCodePanelCaller());
 	}
 
 	@Override

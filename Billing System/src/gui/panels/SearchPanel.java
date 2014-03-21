@@ -135,7 +135,7 @@ public class SearchPanel extends BasicGuiPanel
 
 	private BasicGuiPanel configureHeader()
 	{
-		JLabel headerLbl = new JLabel("Search Customer");
+		JLabel headerLbl = new JLabel("Search");
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -184,7 +184,7 @@ public class SearchPanel extends BasicGuiPanel
 				new MessageDialog("Wrong number", "Customer account number can only contain digits");
 				return;
 			}
-			CustomerBillCaller.searchBill(Integer.valueOf(accountNumber));
+			CustomerBillCaller.searchBill(Integer.valueOf(accountNumber), false);
 		}
 	}
 }

@@ -7,7 +7,7 @@ import gui.panels.callers.AddAreaCodePanelCaller;
 import gui.panels.callers.AddCustomerPanelCaller;
 import gui.panels.callers.GenerateBillPanelCaller;
 import gui.panels.callers.PrintBillPanelCaller;
-import gui.panels.callers.SearchCustomerPanelCaller;
+import gui.panels.callers.SearchPanelCaller;
 
 import javax.swing.JToolBar;
 
@@ -72,13 +72,13 @@ public class BillingSystemToolBar extends JToolBar
 
 	private void addDeleteCustomerBtn()
 	{
-		ToolBarButton delCustomerBtn = new ToolBarButton("Search and delete Customer", "/resources/delete.png", new SearchCustomerPanelCaller());
+		ToolBarButton delCustomerBtn = new ToolBarButton("Search and delete Customer", "/resources/delete.png", new SearchPanelCaller());
 		this.add(delCustomerBtn);
 	}
 
 	private void addSearchCustomerButton()
 	{
-		ToolBarButton searchCustomerBtn = new ToolBarButton("Search Customer", "/resources/search.png", new SearchCustomerPanelCaller());
+		ToolBarButton searchCustomerBtn = new ToolBarButton("Search Customer", "/resources/search.png", new SearchPanelCaller());
 		this.add(searchCustomerBtn);
 	}
 
