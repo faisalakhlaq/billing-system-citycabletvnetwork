@@ -252,7 +252,7 @@ public class AreaCodePanel extends AbstractGuiPanel
 				return;
 			}
 			MessageDialog msgDialog = new MessageDialog();
-			int selection = msgDialog.showConfirmDialog("Confirm deleteion", "Are you sure you want to delete the area code");
+			int selection = msgDialog.showConfirmDialog("Confirm deletion", "Are you sure you want to delete the area code");
 			if (selection == JOptionPane.OK_OPTION)
 			{
 				DeleteAreaCodeCaller.perform(Integer.valueOf(areaCode));

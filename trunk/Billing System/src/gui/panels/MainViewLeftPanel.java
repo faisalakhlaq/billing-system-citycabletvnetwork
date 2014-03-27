@@ -1,6 +1,8 @@
 package gui.panels;
 
+import gui.buttons.ToolBarButton;
 import gui.dialog.MessageDialog;
+import gui.toolbar.BillingSystemToolBar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,6 +39,15 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 		areaCbx = new JComboBox<String>();
 		areaCbx.setModel(getAreaCodes());
 		initPanel();
+	}
+
+	@Override
+	public BillingSystemToolBar getToolBar()
+	{
+		BillingSystemToolBar toolBar = new BillingSystemToolBar();
+		ToolBarButton refreshBtn = new ToolBarButton("Refresh", "/resources/refresh.png", new RefreshAreaCodesListener());
+		toolBar.add(refreshBtn);
+		return toolBar;
 	}
 
 	@Override
@@ -193,6 +204,15 @@ public class MainViewLeftPanel extends AbstractGuiPanel
 		{
 			String areaName = String.valueOf(areaCbx.getSelectedItem());
 			ViewAreaCustomersCaller.perform(areaName);
+		}
+	}
+
+	private class RefreshAreaCodesListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			areaCbx.setModel(getAreaCodes());
 		}
 	}
 }

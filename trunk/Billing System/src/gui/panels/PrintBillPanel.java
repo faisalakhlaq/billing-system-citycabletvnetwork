@@ -1,7 +1,9 @@
 package gui.panels;
 
 import gui.caller.CloseViewCaller;
+import gui.dialog.MessageDialog;
 
+import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -9,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PageFormat;
@@ -24,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 
 import model.Bill;
@@ -32,9 +36,14 @@ import model.Customer;
 import table.CustomerBillHistoryTableModel;
 import table.TableSorter;
 
+@SuppressWarnings("serial")
 public class PrintBillPanel extends BasicGuiPanel implements Printable
 {
-	private static final long serialVersionUID = -7417720568612211026L;
+	private JButton exitbtn = null;
+
+	private JButton resetbtn = null;
+
+	private JButton printBtn = null;
 
 	private JTextField issueDatetxt;
 
@@ -76,6 +85,16 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 
 	private Bill bill = null;
 
+	private Color background = null;
+
+	private BasicGuiPanel header = null;
+
+	private BasicGuiPanel fieldsPanel = null;
+
+	private BasicGuiPanel btnPanel = null;
+
+	private BasicGuiPanel recordPanel = null;
+
 	private Vector<Bill> previousBills = null;
 
 	private String[] columnNames =
@@ -93,6 +112,7 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 	 * */
 	public PrintBillPanel(Customer customer, Bill bill, Vector<Bill> previousBills)
 	{
+		background = this.getBackground();
 		this.customer = customer;
 		this.bill = bill;
 		this.previousBills = previousBills;
@@ -101,9 +121,10 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 
 	private void configurePanel()
 	{
-		BasicGuiPanel header = configureHeader();
-		BasicGuiPanel fieldsPanel = configureDataFieldsPanel();
-		BasicGuiPanel btnPanel = configureBtnPanel();
+		header = configureHeader();
+		fieldsPanel = configureDataFieldsPanel();
+		btnPanel = configureBtnPanel();
+		recordPanel = getRecordPanel();
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -134,17 +155,26 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		c.gridy = 3;
 		c.gridwidth = 1;
 		add(btnPanel, c);
+
+		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 4;
+		c.gridwidth = 1;
+		add(recordPanel, c);
 	}
 
 	private BasicGuiPanel configureBtnPanel()
 	{
 		BasicGuiPanel p = new BasicGuiPanel(new FlowLayout());
 
-		final JButton exitbtn = new JButton("Exit");
+		exitbtn = new JButton("Exit");
 		exitbtn.addActionListener(new CloseViewCaller());
-		final JButton resetbtn = new JButton("Reset");
+		resetbtn = new JButton("Reset");
 		resetbtn.addActionListener(new ResetFieldsListener());
-		JButton printBtn = new JButton("Print");
+		printBtn = new JButton("Print");
 		printBtn.addActionListener(new PrintActionListener());
 
 		p.add(printBtn);
@@ -555,6 +585,7 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		p.add(signatureReceivedAuthoritytxt, c);
 
 		setFields();
+
 		return p;
 	}
 
@@ -563,8 +594,16 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		CompanyInformation compInfo = new CompanyInformation();
 
 		JLabel companyName = new JLabel(compInfo.getCompanyName());
+		Font f = new Font("Monospaced", Font.BOLD, 20);
+		companyName.setFont(f);
+
 		JLabel companyAddress = new JLabel(compInfo.getCompanyAddress() + compInfo.getCompanyTelephoneNumber());
+		Font addressFont = new Font("Monospaced", Font.BOLD, 20);
+		companyAddress.setFont(addressFont);
+
 		JLabel companyOwner = new JLabel(compInfo.getCompanyOwnerName());
+		Font ownerFont = new Font("Monospaced", Font.BOLD, 20);
+		companyOwner.setFont(ownerFont);
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
 		headerPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -681,6 +720,7 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		TableSorter sorter = new TableSorter(model); // ADDED THIS
 		// JTable table = new JTable(new MyTableModel()); //OLD
 		JTable table = new JTable(sorter); // NEW
+		table.setBackground(Color.WHITE);
 		sorter.setTableHeader(table.getTableHeader()); // ADDED THIS
 		// table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -689,10 +729,11 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 
 		// Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(table);
-
+		scrollPane.setBackground(Color.WHITE);
 		// scrollPane.setPreferredSize(new Dimension(1000, 500));
 
 		billHistoryPanel.setOpaque(true);
+		billHistoryPanel.setBackground(Color.WHITE);
 		billHistoryPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -706,6 +747,23 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		billHistoryPanel.add(scrollPane, c);
 
 		return billHistoryPanel;
+	}
+
+	/**
+	 * Enable a caller to print a bill and close the panel without user
+	 * interference
+	 */
+	public void printAndClose()
+	{
+		printBtn.doClick();
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				exitbtn.doClick();
+			}
+		});
 	}
 
 	private class ResetFieldsListener implements ActionListener
@@ -742,20 +800,152 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		public void actionPerformed(ActionEvent e)
 		{
 			PrinterJob printJob = PrinterJob.getPrinterJob();
-			setFieldsEditable(false);
+			// setFieldsEditable(false);
 			printJob.setPrintable(PrintBillPanel.this);
-			if (printJob.printDialog())
+			showButtons(false); // Hide buttons before printing
+			setBackgroundColor(Color.WHITE);
+			// if (printJob.printDialog())
+			// {
+			try
 			{
-				try
-				{
-					printJob.print();
-				}
-				catch (Exception PrintException)
-				{
-					PrintException.printStackTrace();
-				}
+				printJob.print();
 			}
-			setFieldsEditable(true);
+			catch (Exception printException)
+			{
+				new MessageDialog("Error", "Error occured while printing! +\n" + printException.getMessage());
+				printException.printStackTrace();
+			}
+			// }
+			setBackgroundColor(background);
+			showButtons(true);// Show buttons after printing
+			// setFieldsEditable(true);
 		}
+	}
+
+	private void setBackgroundColor(Color color)
+	{
+		this.setBackground(color);
+		header.setBackground(color);
+		btnPanel.setBackground(color);
+		recordPanel.setBackground(color);
+		fieldsPanel.setBackground(color);
+	}
+
+	/**
+	 * Add the same fields at the end of the panel for the company to keep with
+	 * them.
+	 * <p>
+	 * The top part of the printed bill will be given to the customer as receipt
+	 * and the lower part of the page will be kept in the company for record
+	 */
+	private BasicGuiPanel getRecordPanel()
+	{
+		JLabel billNoLbl = new JLabel("Bill No");
+		JLabel acNoLbl = new JLabel("A/c No");
+		JLabel areaCodeLbl = new JLabel("Area Code");
+		JLabel custNameLbl = new JLabel("Customer's Name");
+		JLabel addressLbl = new JLabel("Address");
+		JLabel billingMonthLbl = new JLabel("Billing Month");
+		JLabel receivedAmountLbl = new JLabel("Received Amount");
+		JLabel signatureReceivedAuthorityLbl = new JLabel("Signature Recieved Authority");
+
+		JTextField billNo = new JTextField(20);
+		JTextField acNo = new JTextField(20);
+		JTextField areaCode = new JTextField(20);
+		JTextField custName = new JTextField(20);
+		JTextField address = new JTextField(20);
+		JTextField billingMonth = new JTextField(20);
+		JTextField receivedAmount = new JTextField(20);
+		JTextField signatureReceivedAuthority = new JTextField(20);
+
+		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
+		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		GridBagConstraints c = new GridBagConstraints();
+
+		setGridBagConstraints(c, 0, 1, GridBagConstraints.LINE_START, 10, 0);
+		p.add(billNoLbl, c);
+
+		setGridBagConstraints(c, 1, 1, GridBagConstraints.LINE_END, 10, 10);
+		p.add(billNo, c);
+
+		setGridBagConstraints(c, 2, 1, GridBagConstraints.LINE_START, 10, 0);
+		p.add(acNoLbl, c);
+
+		setGridBagConstraints(c, 3, 1, GridBagConstraints.LINE_END, 10, 10);
+		p.add(acNo, c);
+
+		setGridBagConstraints(c, 0, 2, GridBagConstraints.LINE_START, 10, 0);
+		p.add(areaCodeLbl, c);
+
+		setGridBagConstraints(c, 1, 2, GridBagConstraints.LINE_END, 10, 10);
+		p.add(areaCode, c);
+
+		setGridBagConstraints(c, 2, 2, GridBagConstraints.LINE_START, 10, 0);
+		p.add(custNameLbl, c);
+
+		setGridBagConstraints(c, 3, 2, GridBagConstraints.LINE_END, 10, 10);
+		p.add(custName, c);
+
+		setGridBagConstraints(c, 0, 3, GridBagConstraints.LINE_START, 10, 0);
+		p.add(addressLbl, c);
+
+		setGridBagConstraints(c, 1, 3, GridBagConstraints.LINE_END, 10, 10);
+		p.add(address, c);
+
+		setGridBagConstraints(c, 2, 3, GridBagConstraints.LINE_START, 10, 0);
+		p.add(billingMonthLbl, c);
+
+		setGridBagConstraints(c, 3, 3, GridBagConstraints.LINE_END, 10, 10);
+		p.add(billingMonth, c);
+
+		setGridBagConstraints(c, 0, 4, GridBagConstraints.LINE_START, 10, 0);
+		p.add(receivedAmountLbl, c);
+
+		setGridBagConstraints(c, 1, 4, GridBagConstraints.LINE_END, 10, 10);
+		p.add(receivedAmount, c);
+
+		setGridBagConstraints(c, 2, 4, GridBagConstraints.LINE_START, 10, 0);
+		p.add(signatureReceivedAuthorityLbl, c);
+
+		setGridBagConstraints(c, 3, 4, GridBagConstraints.LINE_END, 10, 10);
+		p.add(signatureReceivedAuthority, c);
+
+		{ // fill the fields with the customer and bill data
+			if (bill != null || customer != null)
+			{
+				billNo.setText(String.valueOf(bill.getBillNumber()));
+				acNo.setText(String.valueOf(bill.getAccountNumber()));
+				areaCode.setText(String.valueOf(customer.getAreaCode()));
+				custName.setText(customer.getCustomerName());
+				address.setText(customer.getCustomerAddress());
+				billingMonth.setText(bill.getMonth());
+				receivedAmount.setText(String.valueOf(bill.getReceivedAmount()));
+				signatureReceivedAuthority.setText(String.valueOf(bill.getReceivedBy()));
+			}
+		}
+		return p;
+	}
+
+	private void setGridBagConstraints(GridBagConstraints c, int gridx, int gridy, int placement, int paddingTop, int paddingLeft)
+	{
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = placement;
+		c.insets = new Insets(paddingTop, paddingLeft, 0, 0); // top and left
+																// padding
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = gridx;
+		c.gridy = gridy;
+		c.gridwidth = 1;
+	}
+
+	/**
+	 * Make the buttons invisible or visible
+	 */
+	private void showButtons(boolean show)
+	{
+		exitbtn.setVisible(show);
+		resetbtn.setVisible(show);
+		printBtn.setVisible(show);
 	}
 }

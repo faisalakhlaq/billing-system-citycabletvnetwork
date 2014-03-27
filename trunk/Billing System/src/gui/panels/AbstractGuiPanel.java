@@ -1,5 +1,8 @@
 package gui.panels;
 
+import gui.toolbar.BillingSystemToolBar;
+
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,6 +10,25 @@ import java.awt.Insets;
 @SuppressWarnings("serial")
 public abstract class AbstractGuiPanel extends BasicGuiPanel implements GuiPanel
 {
+	public AbstractGuiPanel()
+	{
+		// TODO get and add the menu and tool bar to the panel
+		BillingSystemToolBar toolBar = getToolBar();
+
+		if (toolBar != null)
+		{
+			this.add(BorderLayout.NORTH, toolBar);
+			toolBar.setFloatable(false);
+		}
+	}
+
+	@Override
+	public BillingSystemToolBar getToolBar()
+	{
+		// implement where required
+		return null;
+	}
+
 	public void addPanels()
 	{
 		setLayout(new GridBagLayout());
