@@ -8,7 +8,7 @@ import gui.menubar.MainFrameMenuBar;
 import gui.panels.BasicGuiPanel;
 import gui.panels.CompanyInfoBannerPanel;
 import gui.panels.MainViewLeftPanel;
-import gui.toolbar.BillingSystemToolBar;
+import gui.toolbar.MainViewToolBar;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -40,7 +40,7 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 
 	private BillingSystemStatusBar statusbar = null;
 
-	private BillingSystemToolBar toolBar = null;
+	private MainViewToolBar toolBar = null;
 
 	private static BillingSystemMainFrame instance = null;
 
@@ -112,7 +112,7 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 
 	private void configureToolBar()
 	{
-		toolBar = new BillingSystemToolBar();
+		toolBar = new MainViewToolBar();
 		getContentPane().add(BorderLayout.NORTH, toolBar);
 	}
 

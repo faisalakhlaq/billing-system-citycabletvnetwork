@@ -1,7 +1,6 @@
 package gui.menubar;
 
 import gui.BillingSystemView;
-import gui.GUIMenuBar;
 import gui.caller.AboutMenuItemCaller;
 import gui.caller.ExitSystemCaller;
 import gui.caller.ShowStatusbarCaller;

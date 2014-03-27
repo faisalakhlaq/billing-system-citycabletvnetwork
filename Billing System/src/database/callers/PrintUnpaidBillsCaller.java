@@ -1,13 +1,12 @@
-package gui.panels.callers;
+package database.callers;
 
 import gui.BillingSystemDesktopPane;
 import gui.dialog.MessageDialog;
-import gui.panels.BillPanel;
-import gui.panels.GuiPanel;
 import gui.panels.PrintBillPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import model.Bill;
@@ -16,40 +15,46 @@ import database.BillHandler;
 import database.CustomerHandler;
 
 /**
- * Print all or an individual bill.
+ * Retrieve all the unpaid bills from the table
  * <p>
- * Provide the bill object if individual bill needs to be printed
+ * and send it to the print bill panel one by one
  */
-public class PrintBillPanelCaller implements ActionListener
+public class PrintUnpaidBillsCaller implements ActionListener
 {
-	private GuiPanel panel = null;
-
-	public PrintBillPanelCaller(GuiPanel p)
-	{
-		panel = p;
-	}
-
-	public PrintBillPanelCaller()
-	{
-	}
-
 	/**
-	 * Get the bill from the BillPanel.
+	 * Retrieve all the unpaid bills from the table
 	 * <p>
-	 * Search the customer according to the Bills customer account number
+	 * and send it to the print bill panel one by one
 	 */
+	public PrintUnpaidBillsCaller()
+	{
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
+		BillHandler billHandler = new BillHandler();
 		try
 		{
-			Bill bill = getBill();
-
-			Customer customer = getCustomer(bill.getAccountNumber());
-			Vector<Bill> previousBills = getBillHistory(customer.getAccountNumber());
-
-			BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-			desktop.addPanel("Print Bill", new PrintBillPanel(customer, bill, previousBills));
+			ArrayList<Bill> unpaidBills = billHandler.getAllUnpaidBills();
+			for (Bill b : unpaidBills)
+			{
+				if (b == null) continue;
+				try
+				{
+					int acNo = b.getAccountNumber();
+					PrintBillPanel pritBillPanel = new PrintBillPanel(getCustomer(acNo), b, getBillHistory(acNo));
+					BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
+					desktop.addPanel("Print Bill", pritBillPanel);
+					pritBillPanel.printAndClose();
+				}
+				catch (Exception e)
+				{
+					System.err.println(e.getMessage());
+					// Skip this customer and do not print the bill. And carry
+					// on printing the other bills
+				}
+			}
 		}
 		catch (Exception e)
 		{
@@ -90,23 +95,5 @@ public class PrintBillPanelCaller implements ActionListener
 			throw new Exception("Unable to Print the Bill! " + e.getMessage());
 		}
 		return c;
-	}
-
-	private Bill getBill() throws Exception
-	{
-		if (panel == null)
-		{
-			throw new Exception("Unable to print bill! Panel = null");
-		}
-		Bill bill = null;
-		if (panel instanceof BillPanel)
-		{
-			bill = ((BillPanel) panel).getBill();
-		}
-		if (bill == null)
-		{
-			throw new Exception("Unable to Print the Bill. Not able to retrieve the bill from the panel. Bill = null");
-		}
-		return bill;
 	}
 }
