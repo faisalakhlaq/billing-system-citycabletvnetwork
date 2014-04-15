@@ -1,3 +1,5 @@
+create database billingsystem;
+
 CREATE TABLE CUSTOMER (
 account_number int  NOT NULL PRIMARY KEY,
 date DATE,

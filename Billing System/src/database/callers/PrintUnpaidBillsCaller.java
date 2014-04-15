@@ -43,10 +43,10 @@ public class PrintUnpaidBillsCaller implements ActionListener
 				try
 				{
 					int acNo = b.getAccountNumber();
-					PrintBillPanel pritBillPanel = new PrintBillPanel(getCustomer(acNo), b, getBillHistory(acNo));
+					PrintBillPanel printBillPanel = new PrintBillPanel(getCustomer(acNo), b, getBillHistory(acNo));
 					BillingSystemDesktopPane desktop = BillingSystemDesktopPane.getInstance();
-					desktop.addPanel("Print Bill", pritBillPanel);
-					pritBillPanel.printAndClose();
+					desktop.addPanel("Print Number = " + b.getBillNumber(), printBillPanel);
+					printBillPanel.printAndClose();
 				}
 				catch (Exception e)
 				{

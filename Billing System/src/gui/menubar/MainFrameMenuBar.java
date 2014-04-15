@@ -8,6 +8,7 @@ import gui.panels.callers.AddAreaCodePanelCaller;
 import gui.panels.callers.AddCustomerPanelCaller;
 import gui.panels.callers.AdvertisementBillPanelCaller;
 import gui.panels.callers.DisplayAllAreaCodesPanelCaler;
+import gui.panels.callers.DisplayUnpaidBillsPanelCaller;
 import gui.panels.callers.GenerateSalesPanelCaller;
 import gui.panels.callers.SearchPanelCaller;
 
@@ -143,6 +144,10 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 		JMenuItem salesReportMenuItem = addMenuItem(billMenu, "Sales");
 		salesReportMenuItem.addActionListener(new GenerateSalesPanelCaller());
 		salesReportMenuItem.setToolTipText("Generate Sales Report");
+
+		JMenuItem unpaidBillsMenuItem = addMenuItem(billMenu, "View Unpaid Bills");
+		unpaidBillsMenuItem.addActionListener(new DisplayUnpaidBillsPanelCaller());
+		unpaidBillsMenuItem.setToolTipText("Display all the unpaid bills");
 	}
 
 	private void configureAreaCodeMenu(JMenu areaCodeMenu)
