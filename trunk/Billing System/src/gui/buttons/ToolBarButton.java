@@ -29,7 +29,7 @@ public class ToolBarButton extends JButton
 		setBorder(BorderFactory.createEtchedBorder());
 
 		setBorderPainted(false);
-		// Making nice rollover effect
+		// Making nice roll over effect
 		// we use the same listener for all buttons
 		addMouseListener(buttonMouseListener);
 		setRolloverEnabled(true);
@@ -46,14 +46,14 @@ public class ToolBarButton extends JButton
 		setToolTipText(toolTipText);
 	}
 
-	private void setIcon(String icon)
+	private void setIcon(String iconURL)
 	{
-		if (icon == null || icon.trim().isEmpty()) return;
+		if (iconURL == null || iconURL.trim().isEmpty()) return;
 
-		ImageIcon addressIcon = new ImageIcon(getClass().getResource(icon));
-		if (addressIcon != null)
+		ImageIcon icon = new ImageIcon(getClass().getResource(iconURL));
+		if (icon != null)
 		{
-			setIcon(addressIcon);
+			setIcon(icon);
 		}
 	}
 

@@ -1,6 +1,7 @@
 package gui.panels;
 
 import gui.caller.CloseViewCaller;
+import gui.dialog.MessageDialog;
 import gui.panels.callers.PrintBillPanelCaller;
 
 import java.awt.ComponentOrientation;
@@ -9,10 +10,13 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import model.Bill;
@@ -239,7 +243,15 @@ public class BillPanel extends AbstractGuiPanel
 		payBtn.addActionListener(new PayBillCaller(BillPanel.this));
 
 		editBtn = new JButton("Edit");
-		// editBtn.addActionListener(new EditCustomer());
+		editBtn.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new MessageDialog("Sorry", "Editing operation is not provided! Trying deleting and adding a new bill", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 
 		// cancelbtn = new JButton("Cancel");
 		// cancelbtn.addActionListener(new CancelEdit());

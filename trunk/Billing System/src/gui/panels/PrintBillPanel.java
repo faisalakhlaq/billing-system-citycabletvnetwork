@@ -3,8 +3,10 @@ package gui.panels;
 import gui.caller.CloseViewCaller;
 import gui.dialog.MessageDialog;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -14,20 +16,25 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.IOException;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
 import model.Bill;
@@ -39,6 +46,8 @@ import table.TableSorter;
 @SuppressWarnings("serial")
 public class PrintBillPanel extends BasicGuiPanel implements Printable
 {
+	private Font txtFieldFont = new Font("Monospaced", Font.BOLD, 20);
+
 	private JButton exitbtn = null;
 
 	private JButton resetbtn = null;
@@ -128,42 +137,67 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		JSeparator x = new JSeparator(SwingConstants.HORIZONTAL);
+		x.setMinimumSize(new Dimension(this.getWidth(), 3));
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.anchor = GridBagConstraints.CENTER;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 1;
+		setPanelGridBagConstraints(c, 0, 1, 10);
+		c.ipady = 20; // make this component tall
 		add(header, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
+		c.ipady = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.CENTER;
 		c.weightx = 0.75;
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 1;
-		add(fieldsPanel, c);
+		add(x, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
+		setPanelGridBagConstraints(c, 0, 3, 30);
+		add(fieldsPanel, c);
+		// add(x);
+
+		setPanelGridBagConstraints(c, 0, 4, 30);
+		add(getInstructionsPanel(), c);
+		// add(x);
+
+		// setPanelGridBagConstraints(c, 0, 4, 30);
+		x = new JSeparator(SwingConstants.HORIZONTAL);
+		x.setMinimumSize(new Dimension(this.getWidth(), 3));
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.CENTER;
 		c.weightx = 0.75;
 		c.weighty = 0;
 		c.gridx = 0;
-		c.gridy = 3;
+		c.gridy = 5;
 		c.gridwidth = 1;
+		add(x, c);
+
+		setPanelGridBagConstraints(c, 0, 6, 30);
 		add(btnPanel, c);
 
-		c.fill = GridBagConstraints.VERTICAL;
-		c.anchor = GridBagConstraints.CENTER;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 4;
-		c.gridwidth = 1;
+		setPanelGridBagConstraints(c, 0, 7, 30);
 		add(recordPanel, c);
+	}
+
+	private BasicGuiPanel getInstructionsPanel()
+	{
+		BasicGuiPanel p = new BasicGuiPanel();
+		BufferedImage myPicture = null;
+		try
+		{
+			myPicture = ImageIO.read(this.getClass().getResource("/resources/instructions.bmp"));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+		picLabel.setBorder(null);
+		p.add(picLabel, BorderLayout.CENTER);
+		p.setBorder(null);
+		return p;
 	}
 
 	private BasicGuiPanel configureBtnPanel()
@@ -187,23 +221,41 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 	private BasicGuiPanel configureDataFieldsPanel()
 	{
 		JLabel issueDateLbl = new JLabel("Date of Issue");
+		issueDateLbl.setFont(txtFieldFont);
 		JLabel dueDateLbl = new JLabel("Due Date");
+		dueDateLbl.setFont(txtFieldFont);
 		JLabel billNoLbl = new JLabel("Bill No");
+		billNoLbl.setFont(txtFieldFont);
 		JLabel acNoLbl = new JLabel("A/c No");
+		acNoLbl.setFont(txtFieldFont);
 		JLabel areaCodeLbl = new JLabel("Area Code");
+		areaCodeLbl.setFont(txtFieldFont);
 		JLabel custNameLbl = new JLabel("Customer's Name");
+		custNameLbl.setFont(txtFieldFont);
 		JLabel telNumberLbl = new JLabel("Phone No");
+		telNumberLbl.setFont(txtFieldFont);
 		JLabel addressLbl = new JLabel("Address");
+		addressLbl.setFont(txtFieldFont);
 		JLabel billingMonthLbl = new JLabel("Billing Month");
+		billingMonthLbl.setFont(txtFieldFont);
 		JLabel currentPayableAmountLbl = new JLabel("Current Payable Amount");
+		currentPayableAmountLbl.setFont(txtFieldFont);
 		JLabel previousAmountLbl = new JLabel("Previous Amount");
+		previousAmountLbl.setFont(txtFieldFont);
 		JLabel payableAmountByDueDateLbl = new JLabel("Payable Amount By Due Date");
+		payableAmountByDueDateLbl.setFont(txtFieldFont);
 		JLabel payableAfterDueDateLbl = new JLabel("Payable After Due Date");
+		payableAfterDueDateLbl.setFont(txtFieldFont);
 		JLabel surchargeLbl = new JLabel("Surcharge");
+		surchargeLbl.setFont(txtFieldFont);
 		JLabel advertisementChargesLbl = new JLabel("Advertisement Charges");
+		advertisementChargesLbl.setFont(txtFieldFont);
 		JLabel receivedAmountLbl = new JLabel("Received Amount");
+		receivedAmountLbl.setFont(txtFieldFont);
 		JLabel balanceLbl = new JLabel("Balance");
+		balanceLbl.setFont(txtFieldFont);
 		JLabel signatureReceivedAuthorityLbl = new JLabel("Signature Recieved Authority");
+		signatureReceivedAuthorityLbl.setFont(txtFieldFont);
 
 		issueDatetxt = new JTextField(20);
 		dueDatetxt = new JTextField(20);
@@ -228,29 +280,18 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		// panel.setLayout(new GridBagLayout());
+		p.setBorder(BorderFactory.createEtchedBorder());
 		GridBagConstraints c = new GridBagConstraints();
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 1, GridBagConstraints.LINE_START, 10, 0);
 		p.add(issueDateLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 1, GridBagConstraints.LINE_END, 10, 10);
 		p.add(issueDatetxt, c);
 
 		c.fill = GridBagConstraints.VERTICAL;
 		c.anchor = GridBagConstraints.LINE_END;
+		c.insets = new Insets(10, 10, 10, 20);
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridx = 2;
@@ -259,332 +300,117 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		c.gridheight = 20;
 		p.add(getBillHistoryPanel(), c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		c.gridheight = 1;
+		setGridBagConstraints(c, 0, 2, GridBagConstraints.LINE_START, 10, 0);
 		p.add(dueDateLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 2;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 2, GridBagConstraints.LINE_END, 10, 10);
 		p.add(dueDatetxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 3, GridBagConstraints.LINE_START, 10, 0);
 		p.add(billNoLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 3;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 3, GridBagConstraints.LINE_END, 10, 10);
 		p.add(billNotxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 4;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 4, GridBagConstraints.LINE_START, 10, 0);
 		p.add(acNoLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 4;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 4, GridBagConstraints.LINE_END, 10, 10);
 		p.add(acNotxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 5;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 5, GridBagConstraints.LINE_START, 10, 0);
 		p.add(areaCodeLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 5;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 5, GridBagConstraints.LINE_END, 10, 10);
 		p.add(areaCodetxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 6;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 6, GridBagConstraints.LINE_START, 10, 0);
 		p.add(custNameLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 6;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 6, GridBagConstraints.LINE_END, 10, 10);
 		p.add(custNametxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 7;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 7, GridBagConstraints.LINE_START, 10, 0);
 		p.add(custNameLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 7;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 7, GridBagConstraints.LINE_END, 10, 10);
 		p.add(custNametxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 8;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 8, GridBagConstraints.LINE_START, 10, 0);
 		p.add(telNumberLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 8;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 8, GridBagConstraints.LINE_END, 10, 10);
 		p.add(telNumbertxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 9;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 9, GridBagConstraints.LINE_START, 10, 0);
 		p.add(addressLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 9;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 9, GridBagConstraints.LINE_END, 10, 10);
 		p.add(addresstxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 10;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 10, GridBagConstraints.LINE_START, 10, 0);
 		p.add(billingMonthLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 10;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 10, GridBagConstraints.LINE_END, 10, 10);
 		p.add(billingMonthtxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 11;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 11, GridBagConstraints.LINE_START, 10, 0);
 		p.add(currentPayableAmountLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 11;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 11, GridBagConstraints.LINE_END, 10, 10);
 		p.add(currentPayableAmounttxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 12;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 12, GridBagConstraints.LINE_START, 10, 0);
 		p.add(previousAmountLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 12;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 12, GridBagConstraints.LINE_END, 10, 10);
 		p.add(previousAmounttxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 13;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 13, GridBagConstraints.LINE_START, 10, 0);
 		p.add(payableAmountByDueDateLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 13;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 13, GridBagConstraints.LINE_END, 10, 10);
 		p.add(payableAmountByDueDatetxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 14;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 14, GridBagConstraints.LINE_START, 10, 0);
 		p.add(payableAfterDueDateLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 14;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 14, GridBagConstraints.LINE_END, 10, 10);
 		p.add(payableAfterDueDatetxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 15;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 15, GridBagConstraints.LINE_START, 10, 0);
 		p.add(surchargeLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 15;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 15, GridBagConstraints.LINE_END, 10, 10);
 		p.add(surchargetxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 16;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 16, GridBagConstraints.LINE_START, 10, 0);
 		p.add(advertisementChargesLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 16;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 16, GridBagConstraints.LINE_END, 10, 10);
 		p.add(advertisementChargestxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 17;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 17, GridBagConstraints.LINE_START, 10, 0);
 		p.add(receivedAmountLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 17;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 17, GridBagConstraints.LINE_END, 10, 10);
 		p.add(receivedAmounttxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 18;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 18, GridBagConstraints.LINE_START, 10, 0);
 		p.add(balanceLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 18;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 18, GridBagConstraints.LINE_END, 10, 10);
 		p.add(balancetxt, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_START;
-		c.weightx = 0.25;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 19;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 0, 19, GridBagConstraints.LINE_START, 10, 0);
+		c.insets = new Insets(10, 0, 10, 0);
 		p.add(signatureReceivedAuthorityLbl, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.weightx = 0.75;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 19;
-		c.gridwidth = 1;
+		setGridBagConstraints(c, 1, 19, GridBagConstraints.LINE_END, 10, 10);
+		c.insets = new Insets(10, 10, 10, 0);
 		p.add(signatureReceivedAuthoritytxt, c);
-
-		setFields();
+		setTextFieldFonts();
+		setFieldValues();
 
 		return p;
 	}
@@ -594,15 +420,15 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		CompanyInformation compInfo = new CompanyInformation();
 
 		JLabel companyName = new JLabel(compInfo.getCompanyName());
-		Font f = new Font("Monospaced", Font.BOLD, 20);
+		Font f = new Font("Monospaced", Font.BOLD, 30);
 		companyName.setFont(f);
 
 		JLabel companyAddress = new JLabel(compInfo.getCompanyAddress() + compInfo.getCompanyTelephoneNumber());
-		Font addressFont = new Font("Monospaced", Font.BOLD, 20);
+		Font addressFont = new Font("Monospaced", Font.BOLD, 30);
 		companyAddress.setFont(addressFont);
 
 		JLabel companyOwner = new JLabel(compInfo.getCompanyOwnerName());
-		Font ownerFont = new Font("Monospaced", Font.BOLD, 20);
+		Font ownerFont = new Font("Monospaced", Font.BOLD, 30);
 		companyOwner.setFont(ownerFont);
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());
@@ -685,28 +511,46 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 	/**
 	 * Insert the bill customer data in the text fields
 	 * */
-	private void setFields()
+	private void setFieldValues()
 	{
 		if (bill == null || customer == null) return;
 
 		issueDatetxt.setText(bill.getIssueDate().toString());
+		issueDatetxt.setBorder(null);
 		dueDatetxt.setText(bill.getDueDate().toString());
+		dueDatetxt.setBorder(null);
 		billNotxt.setText(String.valueOf(bill.getBillNumber()));
+		billNotxt.setBorder(null);
 		acNotxt.setText(String.valueOf(bill.getAccountNumber()));
+		acNotxt.setBorder(null);
 		areaCodetxt.setText(String.valueOf(customer.getAreaCode()));
+		areaCodetxt.setBorder(null);
 		custNametxt.setText(customer.getCustomerName());
+		custNametxt.setBorder(null);
 		telNumbertxt.setText(String.valueOf(customer.getTelNumber()));
+		telNumbertxt.setBorder(null);
 		addresstxt.setText(customer.getCustomerAddress());
+		addresstxt.setBorder(null);
 		billingMonthtxt.setText(bill.getMonth());
+		billingMonthtxt.setBorder(null);
 		currentPayableAmounttxt.setText(String.valueOf(bill.getPayableAmount()));
+		currentPayableAmounttxt.setBorder(null);
 		previousAmounttxt.setText("");
+		previousAmounttxt.setBorder(null);
 		payableAmountByDueDatetxt.setText(String.valueOf(bill.getPayableAmount()));
+		payableAmountByDueDatetxt.setBorder(null);
 		payableAfterDueDatetxt.setText("");
+		payableAfterDueDatetxt.setBorder(null);
 		surchargetxt.setText("");
+		surchargetxt.setBorder(null);
 		advertisementChargestxt.setText("");
+		advertisementChargestxt.setBorder(null);
 		receivedAmounttxt.setText(String.valueOf(bill.getReceivedAmount()));
+		receivedAmounttxt.setBorder(null);
 		balancetxt.setText(String.valueOf(""));
+		balancetxt.setBorder(null);
 		signatureReceivedAuthoritytxt.setText(String.valueOf(bill.getReceivedBy()));
+		signatureReceivedAuthoritytxt.setBorder(null);
 	}
 
 	/**
@@ -717,19 +561,20 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 	{
 		BasicGuiPanel billHistoryPanel = new BasicGuiPanel();
 		CustomerBillHistoryTableModel model = new CustomerBillHistoryTableModel(previousBills, columnNames);
-		TableSorter sorter = new TableSorter(model); // ADDED THIS
-		// JTable table = new JTable(new MyTableModel()); //OLD
-		JTable table = new JTable(sorter); // NEW
+		TableSorter sorter = new TableSorter(model);
+		JTable table = new JTable(sorter);
+		table.setBorder(null);
 		table.setBackground(Color.WHITE);
-		sorter.setTableHeader(table.getTableHeader()); // ADDED THIS
-		// table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-
+		table.getTableHeader().setBackground(Color.WHITE);
+		sorter.setTableHeader(table.getTableHeader());
 		// Set up tool tips for column headers.
 		table.getTableHeader().setToolTipText("Click to specify sorting; Control-Click to specify secondary sorting");
 
 		// Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBackground(Color.WHITE);
+		// scrollPane.setBackground(Color.WHITE);
+		scrollPane.getViewport().setBackground(Color.WHITE);
+		scrollPane.setBorder(null);
 		// scrollPane.setPreferredSize(new Dimension(1000, 500));
 
 		billHistoryPanel.setOpaque(true);
@@ -756,14 +601,45 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 	public void printAndClose()
 	{
 		printBtn.doClick();
-		SwingUtilities.invokeLater(new Runnable()
+		Thread t = new Thread()
 		{
-			@Override
 			public void run()
 			{
-				exitbtn.doClick();
+				try
+				{
+					Thread.sleep(20000);
+					exitbtn.doClick();
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
-		});
+		};
+		t.start();
+	}
+
+	private void setTextFieldFonts()
+	{
+		issueDatetxt.setFont(txtFieldFont);
+		dueDatetxt.setFont(txtFieldFont);
+		billNotxt.setFont(txtFieldFont);
+		acNotxt.setFont(txtFieldFont);
+		areaCodetxt.setFont(txtFieldFont);
+		custNametxt.setFont(txtFieldFont);
+		telNumbertxt.setFont(txtFieldFont);
+		addresstxt.setFont(txtFieldFont);
+		addresstxt.setFont(txtFieldFont);
+		billingMonthtxt.setFont(txtFieldFont);
+		currentPayableAmounttxt.setFont(txtFieldFont);
+		previousAmounttxt.setFont(txtFieldFont);
+		payableAmountByDueDatetxt.setFont(txtFieldFont);
+		payableAfterDueDatetxt.setFont(txtFieldFont);
+		surchargetxt.setFont(txtFieldFont);
+		advertisementChargestxt.setFont(txtFieldFont);
+		receivedAmounttxt.setFont(txtFieldFont);
+		balancetxt.setFont(txtFieldFont);
+		signatureReceivedAuthoritytxt.setFont(txtFieldFont);
 	}
 
 	private class ResetFieldsListener implements ActionListener
@@ -841,22 +717,46 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 	private BasicGuiPanel getRecordPanel()
 	{
 		JLabel billNoLbl = new JLabel("Bill No");
+		billNoLbl.setFont(txtFieldFont);
 		JLabel acNoLbl = new JLabel("A/c No");
+		acNoLbl.setFont(txtFieldFont);
 		JLabel areaCodeLbl = new JLabel("Area Code");
+		areaCodeLbl.setFont(txtFieldFont);
 		JLabel custNameLbl = new JLabel("Customer's Name");
+		custNameLbl.setFont(txtFieldFont);
 		JLabel addressLbl = new JLabel("Address");
+		addressLbl.setFont(txtFieldFont);
 		JLabel billingMonthLbl = new JLabel("Billing Month");
+		billingMonthLbl.setFont(txtFieldFont);
 		JLabel receivedAmountLbl = new JLabel("Received Amount");
+		receivedAmountLbl.setFont(txtFieldFont);
 		JLabel signatureReceivedAuthorityLbl = new JLabel("Signature Recieved Authority");
+		signatureReceivedAuthorityLbl.setFont(txtFieldFont);
 
 		JTextField billNo = new JTextField(20);
+		billNo.setBorder(null);
+		billNo.setFont(txtFieldFont);
 		JTextField acNo = new JTextField(20);
+		acNo.setBorder(null);
+		acNo.setFont(txtFieldFont);
 		JTextField areaCode = new JTextField(20);
+		areaCode.setBorder(null);
+		areaCode.setFont(txtFieldFont);
 		JTextField custName = new JTextField(20);
+		custName.setBorder(null);
+		custName.setFont(txtFieldFont);
 		JTextField address = new JTextField(20);
+		address.setBorder(null);
+		address.setFont(txtFieldFont);
 		JTextField billingMonth = new JTextField(20);
+		billingMonth.setBorder(null);
+		billingMonth.setFont(txtFieldFont);
 		JTextField receivedAmount = new JTextField(20);
+		receivedAmount.setBorder(null);
+		receivedAmount.setFont(txtFieldFont);
 		JTextField signatureReceivedAuthority = new JTextField(20);
+		signatureReceivedAuthority.setBorder(null);
+		signatureReceivedAuthority.setFont(txtFieldFont);
 
 		BasicGuiPanel p = new BasicGuiPanel(new GridBagLayout());
 		p.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -932,6 +832,19 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		c.anchor = placement;
 		c.insets = new Insets(paddingTop, paddingLeft, 0, 0); // top and left
 																// padding
+		c.weightx = 0.75;
+		c.weighty = 0;
+		c.gridx = gridx;
+		c.gridy = gridy;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+	}
+
+	private void setPanelGridBagConstraints(GridBagConstraints c, int gridx, int gridy, int paddingTop)
+	{
+		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(paddingTop, 0, 0, 0); // top padding
 		c.weightx = 0.75;
 		c.weighty = 0;
 		c.gridx = gridx;

@@ -57,7 +57,14 @@ public class CustomerBillHistoryTableModel extends AbstractTableModel
 		case AMOUNT:
 			return record.getPayableAmount();
 		case PAID:
-			return record.getPaid();
+			if (record.getPaid())
+			{
+				return "PAID";
+			}
+			else
+			{
+				return "NOT PAID";
+			}
 		default:
 			return new Object();
 		}
