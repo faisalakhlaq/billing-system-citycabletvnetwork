@@ -13,9 +13,21 @@ public class MainViewToolBar extends BillingSystemToolBar
 {
 	private static final long serialVersionUID = -3111840679726761563L;
 
-	public MainViewToolBar()
+	private static MainViewToolBar instance = null;
+
+	private MainViewToolBar()
 	{
 		addToolBarItems();
+	}
+
+	public static MainViewToolBar getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new MainViewToolBar();
+		}
+
+		return instance;
 	}
 
 	private void addToolBarItems()
