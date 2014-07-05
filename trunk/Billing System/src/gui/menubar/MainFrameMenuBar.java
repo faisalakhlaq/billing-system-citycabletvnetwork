@@ -31,13 +31,24 @@ public class MainFrameMenuBar extends GUIMenuBar implements BillingSystemView
 
 	private BillingSystemView owningView = null;
 
+	private static MainFrameMenuBar instance = null;
+
 	// TODO increase the size of the menubar
-	public MainFrameMenuBar(String name, BillingSystemView owningView)
+	private MainFrameMenuBar(String name, BillingSystemView owningView)
 	{
 		setName(name);
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		setOwningView(owningView);
 		configureMenuBar();
+	}
+
+	public static MainFrameMenuBar getInstance(String name, BillingSystemView owningView)
+	{
+		if (instance == null)
+		{
+			instance = new MainFrameMenuBar(name, owningView);
+		}
+		return instance;
 	}
 
 	private void configureMenuBar()

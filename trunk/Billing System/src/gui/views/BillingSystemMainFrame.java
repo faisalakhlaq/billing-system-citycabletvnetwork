@@ -6,7 +6,7 @@ import gui.BillingSystemView;
 import gui.GUIFrame;
 import gui.menubar.MainFrameMenuBar;
 import gui.panels.BasicGuiPanel;
-import gui.panels.CompanyInfoBannerPanel;
+import gui.panels.CompanyInfoPanel;
 import gui.panels.MainViewLeftPanel;
 import gui.toolbar.MainViewToolBar;
 
@@ -82,14 +82,14 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 	private void configurePanel()
 	{
 		BillingSystemDesktopPane desktopPane = BillingSystemDesktopPane.getInstance();
-		CompanyInfoBannerPanel bannerPanel = new CompanyInfoBannerPanel();
+		CompanyInfoPanel bannerPanel = new CompanyInfoPanel();
 		Container pane = getContentPane();
 
 		MainViewLeftPanel leftPanel = new MainViewLeftPanel();
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, new JScrollPane(desktopPane));
 		splitPane.setResizeWeight(0.04);
-		 splitPane.setOneTouchExpandable(true);
+		splitPane.setOneTouchExpandable(true);
 		// splitPane.setUI(new BasicSplitPaneUI()
 		// {
 		// public BasicSplitPaneDivider createDefaultDivider()
@@ -112,13 +112,13 @@ public class BillingSystemMainFrame extends GUIFrame implements BillingSystemVie
 
 	private void configureToolBar()
 	{
-		toolBar = new MainViewToolBar();
+		toolBar = MainViewToolBar.getInstance();
 		getContentPane().add(BorderLayout.NORTH, toolBar);
 	}
 
 	private void configureMenuBar()
 	{
-		menuBar = new MainFrameMenuBar("MenuBar", BillingSystemMainFrame.this);
+		menuBar = MainFrameMenuBar.getInstance("MenuBar", BillingSystemMainFrame.this);
 		setJMenuBar(menuBar);
 	}
 

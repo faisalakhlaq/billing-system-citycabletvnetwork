@@ -46,7 +46,7 @@ import table.TableSorter;
 @SuppressWarnings("serial")
 public class PrintBillPanel extends BasicGuiPanel implements Printable
 {
-	private Font txtFieldFont = new Font("Monospaced", Font.BOLD, 20);
+	private Font txtFieldFont = new Font("Monospaced", Font.BOLD, 30);
 
 	private JButton exitbtn = null;
 
@@ -420,15 +420,15 @@ public class PrintBillPanel extends BasicGuiPanel implements Printable
 		CompanyInformation compInfo = new CompanyInformation();
 
 		JLabel companyName = new JLabel(compInfo.getCompanyName());
-		Font f = new Font("Monospaced", Font.BOLD, 30);
+		Font f = new Font("Monospaced", Font.BOLD, 40);
 		companyName.setFont(f);
 
 		JLabel companyAddress = new JLabel(compInfo.getCompanyAddress() + compInfo.getCompanyTelephoneNumber());
-		Font addressFont = new Font("Monospaced", Font.BOLD, 30);
+		Font addressFont = new Font("Monospaced", Font.BOLD, 40);
 		companyAddress.setFont(addressFont);
 
 		JLabel companyOwner = new JLabel(compInfo.getCompanyOwnerName());
-		Font ownerFont = new Font("Monospaced", Font.BOLD, 30);
+		Font ownerFont = new Font("Monospaced", Font.BOLD, 40);
 		companyOwner.setFont(ownerFont);
 
 		BasicGuiPanel headerPanel = new BasicGuiPanel(new GridBagLayout());

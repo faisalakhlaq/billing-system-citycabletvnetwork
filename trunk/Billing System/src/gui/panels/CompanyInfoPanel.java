@@ -14,11 +14,11 @@ import model.CompanyInformation;
  * This panel will be displayed on the main window. It displays the information
  * about the company
  * */
-public class CompanyInfoBannerPanel extends BasicGuiPanel
+public class CompanyInfoPanel extends BasicGuiPanel
 {
 	private static final long serialVersionUID = 3644484225934630220L;
 
-	public CompanyInfoBannerPanel()
+	public CompanyInfoPanel()
 	{
 		configurePanel();
 	}
